@@ -12,7 +12,7 @@ setup(
     description="Ultra-lightweight Deep Learning Framework for Raspberry Pi",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    url="https://github.com/dhaval-gamet/lowmind",
+    url="https://github.com/dhaval-vedra/lowmind",
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Education",
