@@ -1,0 +1,5 @@
+numpy>=1.19.0
+psutil>=5.8.0
+pytest>=6.0
+pytest-cov
+matplotlib>=3.3.0

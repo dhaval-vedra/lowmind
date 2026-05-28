@@ -1,0 +1,7 @@
+include README.md
+include CHANGELOG.md
+include LICENSE
+include requirements.txt
+recursive-include lowmind *.py
+recursive-include examples *.py
+recursive-include tests *.py
