@@ -1,6 +1,6 @@
 
 <div align="center">
-<img width="1200" height="475" alt="logo.png" src="logo.png" />
+<img width="1200" height="475" alt="" src="logo.png" />
 </div>
 
 # LowMind — Ultra-Lightweight Deep Learning Framework
