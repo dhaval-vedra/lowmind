@@ -94,29 +94,24 @@ class Conv2d(Module):
 
     @staticmethod
     def _im2col(x_padded, kH, kW, sH, sW, out_H, out_W):
-        """Convert input patches to columns for efficient convolution."""
+        """Convert input patches to columns for efficient convolution (highly optimized stride tricks)."""
         N, C, H, W = x_padded.shape
-        col = np.zeros((N, C, kH, kW, out_H, out_W), dtype=np.float32)
-        for i in range(kH):
-            i_max = i + sH * out_H
-            for j in range(kW):
-                j_max = j + sW * out_W
-                col[:, :, i, j, :, :] = x_padded[:, :, i:i_max:sH, j:j_max:sW]
-        return col.reshape(N, C * kH * kW, out_H * out_W)
+        shape = (N, C, out_H, out_W, kH, kW)
+        strides = (
+            x_padded.strides[0],
+            x_padded.strides[1],
+            x_padded.strides[2] * sH,
+            x_padded.strides[3] * sW,
+            x_padded.strides[2],
+            x_padded.strides[3]
+        )
+        cols = np.lib.stride_tricks.as_strided(x_padded, shape=shape, strides=strides)
+        return cols.transpose(0, 1, 4, 5, 2, 3).reshape(N, C * kH * kW, out_H * out_W).copy()
 
     @staticmethod
     def _col2im(col, x_shape, kH, kW, sH, sW, padding):
-        N, C, H, W = x_shape
-        pH, pW = padding
-        H_padded, W_padded = H + 2 * pH, W + 2 * pW
-        out_H = (H_padded - kH) // sH + 1
-        out_W = (W_padded - kW) // sW + 1
-        x_padded = np.zeros((N, C, H_padded, W_padded), dtype=np.float32)
-        col_rs = col.reshape(N, C, kH, kW, out_H, out_W)
-        for i in range(kH):
-            for j in range(kW):
-                x_padded[:, :, i:i + sH * out_H:sH, j:j + sW * out_W:sW] += col_rs[:, :, i, j, :, :]
-        return x_padded[:, :, pH:pH + H, pW:pW + W] if (pH > 0 or pW > 0) else x_padded
+        from ..utils.accelerator import col2im_optimized
+        return col2im_optimized(col, x_shape, kH, kW, sH, sW, padding)
 
     def forward(self, x: Tensor) -> Tensor:
         N, C, H, W = x.data.shape

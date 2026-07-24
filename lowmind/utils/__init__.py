@@ -12,3 +12,4 @@ from .pruner import Pruner
 from .distillation import DistillationTrainer
 from .quantizer import QuantizedTensor, quantize_weight, quantize_model
 from .checkpoint import checkpoint
+from .accelerator import is_jit_accelerated, col2im_optimized
