@@ -90,6 +90,8 @@ from .utils.callbacks import (
 from .utils.monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .utils.profiler import ModelProfiler
 from .utils.lr_finder import LRFinder
+from .utils.pruner import Pruner
+from .utils.distillation import DistillationTrainer
 
 # ── Pre-built Models ───────────────────────────────────────────────────────────
 from .models.micro_cnn import MicroMLP, MicroCNN, TinyResNet
@@ -145,6 +147,8 @@ __all__ = [
     "SystemMonitor", "memory_trace", "RaspberryPiAdvancedMonitor",
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
+    # Advanced Optimizations
+    "Pruner", "DistillationTrainer",
     # Models
     "MicroMLP", "MicroCNN", "TinyResNet",
     # Sub-modules

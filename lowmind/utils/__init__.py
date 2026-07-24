@@ -8,3 +8,5 @@ from .callbacks import Callback, EarlyStopping, ModelCheckpoint, LRSchedulerCall
 from .monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .profiler import ModelProfiler
 from .lr_finder import LRFinder
+from .pruner import Pruner
+from .distillation import DistillationTrainer
