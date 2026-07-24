@@ -149,6 +149,56 @@ class TestAdvancedOptimizations(unittest.TestCase):
         history = trainer.fit(loader, epochs=1)
         self.assertIn('train_loss', history)
 
+    def test_gradient_checkpointing(self):
+        """Test Gradient Checkpointing function"""
+        print("Testing Gradient Checkpointing...")
+
+        # Define a simple function/layer block (e.g. Sequential block)
+        block = lm.Sequential(
+            lm.Linear(10, 20),
+            lm.ReLU(),
+            lm.Linear(20, 5)
+        )
+
+        # Run standard forward and backward pass
+        x1 = lm.Tensor(np.random.randn(2, 10), requires_grad=True)
+        out1 = block(x1)
+        loss1 = out1.sum()
+
+        optimizer1 = lm.SGD(block.parameters(), lr=0.1)
+        optimizer1.zero_grad()
+        loss1.backward()
+
+        # Save standard gradients
+        grad_x1 = x1.grad.copy() if x1.grad is not None else None
+        grads_block = [p.grad.copy() for p in block.parameters() if p.grad is not None]
+
+        # Reset gradients
+        optimizer1.zero_grad()
+        if x1.grad is not None:
+            x1.grad.fill(0.0)
+
+        # Run with checkpointing
+        x2 = lm.Tensor(x1.data.copy(), requires_grad=True)
+        out2 = lm.checkpoint(block, x2)
+        loss2 = out2.sum()
+
+        loss2.backward()
+
+        # Verify that output values match
+        np.testing.assert_allclose(out1.data, out2.data, rtol=1e-5)
+
+        # Verify that input gradients match exactly
+        if grad_x1 is not None:
+            np.testing.assert_allclose(grad_x1, x2.grad, rtol=1e-5)
+
+        # Verify that parameters gradients match exactly
+        grads_checkpointed = [p.grad.copy() for p in block.parameters() if p.grad is not None]
+        for g1, g2 in zip(grads_block, grads_checkpointed):
+            np.testing.assert_allclose(g1, g2, rtol=1e-5)
+
+        print("Gradient Checkpointing gradients match standard backpropagation exactly!")
+
 
 def run_tests():
     print("🧪 Running LowMind Advanced Optimization Tests...")
