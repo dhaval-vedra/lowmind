@@ -823,7 +823,25 @@ qt = lm.QuantizedTensor(q_tensor, scale)
 dequant_weight = qt.dequantize()
 ```
 
-#### 3. Knowledge Distillation
+#### 3. Quantization Aware Training (QAT)
+Simulate the effects of 8-bit integer quantization during training using Straight-Through Estimators (STE). This allows the model's weights to adapt and learn quantization robust features, resulting in almost 0% accuracy drop when finally quantized to INT8!
+
+```python
+# 1. Enable QAT on model layers
+lm.prepare_qat(model, enabled=True)
+
+# 2. Train model normally using any trainer or custom loop
+# Standard SGD, Adam, and backpropagation are fully supported
+trainer.fit(loader, epochs=5)
+
+# 3. Disable QAT (optional)
+lm.prepare_qat(model, enabled=False)
+
+# 4. Perform final INT8 quantization
+model.quantize()
+```
+
+#### 4. Knowledge Distillation
 Train an extremely lightweight student model using the "knowledge" of a larger, pre-trained teacher model.
 
 ```python
@@ -845,7 +863,7 @@ trainer = lm.DistillationTrainer(
 trainer.fit(train_loader, epochs=10)
 ```
 
-#### 4. Gradient Accumulation
+#### 5. Gradient Accumulation
 Simulate large batch sizes on low-memory edge devices by accumulating gradients over multiple steps before performing an optimizer update.
 
 ```python

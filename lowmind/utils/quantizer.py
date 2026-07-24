@@ -50,3 +50,33 @@ def quantize_model(model):
             param.data = q_data.astype(np.float32) * scale
             scales[name] = scale
     return scales
+
+
+def fake_quantize(tensor):
+    """
+    Fake quantize a Tensor in the forward pass using the Straight-Through Estimator (STE).
+    Supports Quantization Aware Training (QAT).
+    """
+    max_val = np.max(np.abs(tensor.data))
+    scale = max_val / 127.0 if max_val > 0 else 1.0
+    q_data = np.round(tensor.data / scale).astype(np.float32) * scale
+
+    out = Tensor(q_data, requires_grad=tensor.requires_grad, _children=(tensor,), _op='fake_quantize')
+
+    def _backward():
+        if tensor.requires_grad:
+            tensor._ensure_grad()
+            # STE (Straight-Through Estimator): pass gradient directly
+            tensor.grad += out.grad
+
+    out._backward = _backward
+    return out
+
+
+def prepare_qat(model, enabled=True):
+    """
+    Enable or disable Quantization Aware Training (QAT) on all layers of a model.
+    """
+    for module in model.modules():
+        if hasattr(module, 'weight'):
+            module.qat_mode = enabled

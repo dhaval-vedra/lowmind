@@ -38,7 +38,11 @@ class Linear(Module):
             self._bias_none = True  # keep attr out of __setattr__ routing
 
     def forward(self, x: Tensor) -> Tensor:
-        out = x @ self.weight.T
+        weight = self.weight
+        if getattr(self, 'qat_mode', False):
+            from ..utils.quantizer import fake_quantize
+            weight = fake_quantize(weight)
+        out = x @ weight.T
         if hasattr(self, 'bias') and self.bias is not None:
             out = out + self.bias
         return out
@@ -125,15 +129,20 @@ class Conv2d(Module):
         x_padded = self._pad(x.data, self.padding)
         col = self._im2col(x_padded, kH, kW, sH, sW, out_H, out_W)
 
-        W_flat = self.weight.data.reshape(self.out_channels, -1)
+        weight = self.weight
+        if getattr(self, 'qat_mode', False):
+            from ..utils.quantizer import fake_quantize
+            weight = fake_quantize(weight)
+
+        W_flat = weight.data.reshape(self.out_channels, -1)
         out_data = (W_flat @ col).reshape(N, self.out_channels, out_H, out_W)
 
         if hasattr(self, 'bias'):
             out_data = out_data + self.bias.data.reshape(1, -1, 1, 1)
 
-        requires_grad = x.requires_grad or self.weight.requires_grad
+        requires_grad = x.requires_grad or weight.requires_grad
         out = Tensor(out_data, requires_grad=requires_grad,
-                     _children=(x, self.weight), _op='conv2d')
+                     _children=(x, weight), _op='conv2d')
 
         def _backward():
             if out.grad is None:
@@ -144,12 +153,12 @@ class Conv2d(Module):
                 self.bias._ensure_grad()
                 self.bias.grad += dout.sum(axis=(0, 2, 3))
 
-            if self.weight.requires_grad:
-                self.weight._ensure_grad()
+            if weight.requires_grad:
+                weight._ensure_grad()
                 dout_flat = dout.reshape(self.out_channels, -1)  # (C_out, N*out_H*out_W)
                 # col is (N, C_in*kH*kW, out_H*out_W) -> (C_in*kH*kW, N*out_H*out_W)
                 col_T = col.transpose(1, 0, 2).reshape(C * kH * kW, -1)
-                self.weight.grad += (dout_flat @ col_T.T).reshape(self.weight.data.shape)
+                weight.grad += (dout_flat @ col_T.T).reshape(weight.data.shape)
 
             if x.requires_grad:
                 x._ensure_grad()

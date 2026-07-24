@@ -199,6 +199,39 @@ class TestAdvancedOptimizations(unittest.TestCase):
 
         print("Gradient Checkpointing gradients match standard backpropagation exactly!")
 
+    def test_quantization_aware_training(self):
+        """Test Quantization Aware Training (QAT) with STE"""
+        print("Testing Quantization Aware Training (QAT)...")
+
+        # Create a simple MLP model
+        model = lm.Sequential(
+            lm.Linear(10, 5)
+        )
+
+        # Enable QAT
+        lm.prepare_qat(model, enabled=True)
+        self.assertTrue(getattr(model[0], 'qat_mode', False))
+
+        # Generate dummy input and target
+        x = lm.Tensor(np.random.randn(2, 10))
+        y = lm.Tensor([1, 2])
+
+        # Run forward pass
+        out = model(x)
+        self.assertEqual(out.shape, (2, 5))
+
+        # Run backward pass
+        loss = lm.cross_entropy_loss(out, y)
+        loss.backward()
+
+        # Ensure gradients are propagated back to weights through STE
+        self.assertIsNotNone(model[0].weight.grad)
+        self.assertGreater(np.sum(np.abs(model[0].weight.grad)), 0.0)
+
+        # Turn off QAT
+        lm.prepare_qat(model, enabled=False)
+        self.assertFalse(getattr(model[0], 'qat_mode', True))
+
 
 def run_tests():
     print("🧪 Running LowMind Advanced Optimization Tests...")

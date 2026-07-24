@@ -92,7 +92,7 @@ from .utils.profiler import ModelProfiler
 from .utils.lr_finder import LRFinder
 from .utils.pruner import Pruner
 from .utils.distillation import DistillationTrainer
-from .utils.quantizer import QuantizedTensor, quantize_weight, quantize_model
+from .utils.quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_quantize, prepare_qat
 from .utils.checkpoint import checkpoint
 from .utils.accelerator import is_jit_accelerated
 
@@ -151,7 +151,7 @@ __all__ = [
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
     # Advanced Optimizations
-    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model", "checkpoint", "is_jit_accelerated",
+    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model", "checkpoint", "is_jit_accelerated", "fake_quantize", "prepare_qat",
     # Models
     "MicroMLP", "MicroCNN", "TinyResNet",
     # Sub-modules
