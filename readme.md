@@ -782,6 +782,84 @@ info = lm.memory_manager.get_memory_info()
 
 ---
 
+### Advanced Model Optimizations for Edge Devices
+
+LowMind provides built-in cutting-edge optimization techniques to prune, quantize, and compress your models so they can run with blazing speed and ultra-low memory on devices like Raspberry Pi Zero.
+
+#### 1. Weight Pruning & Sparsity
+Zero out low-magnitude weights to compress the model and introduce sparsity.
+
+```python
+import lowmind as lm
+
+# Initialize model
+model = lm.Sequential(...)
+
+# Create Pruner
+pruner = lm.Pruner(model)
+
+# Prune 50% of the lowest magnitude weights
+pruner.prune_model(sparsity_ratio=0.5)
+
+# Calculate model sparsity percentage
+sparsity = pruner.calculate_sparsity()
+print(f"Model weight sparsity: {sparsity:.2f}%")
+
+# Keep weights sparse during training by re-applying masks at step end
+optimizer.step()
+pruner.apply_masks()
+```
+
+#### 2. INT8 Model Quantization
+Convert model weights from 32-bit floats (`float32`) to 8-bit integers (`int8`) simulation to achieve up to 75% memory reduction with negligible accuracy loss.
+
+```python
+# Quantize model weights in-place to simulate INT8 precision
+model.quantize()
+
+# Alternatively, extract scale factors and quantized representations
+q_tensor, scale = lm.quantize_weight(model[0].weight)
+qt = lm.QuantizedTensor(q_tensor, scale)
+dequant_weight = qt.dequantize()
+```
+
+#### 3. Knowledge Distillation
+Train an extremely lightweight student model using the "knowledge" of a larger, pre-trained teacher model.
+
+```python
+# Create teacher and student models
+teacher_model = lm.Sequential(...)
+student_model = lm.Sequential(...)
+
+# Setup DistillationTrainer (combines hard label loss and soft temperature loss)
+trainer = lm.DistillationTrainer(
+    student_model=student_model,
+    teacher_model=teacher_model,
+    optimizer=lm.SGD(student_model.parameters(), lr=0.1),
+    loss_fn=lm.cross_entropy_loss,
+    temperature=3.0,
+    alpha=0.5
+)
+
+# Distill knowledge
+trainer.fit(train_loader, epochs=10)
+```
+
+#### 4. Gradient Accumulation
+Simulate large batch sizes on low-memory edge devices by accumulating gradients over multiple steps before performing an optimizer update.
+
+```python
+# Pass grad_accum_steps parameter to Trainer
+trainer = lm.Trainer(
+    model=model,
+    optimizer=optimizer,
+    loss_fn=lm.cross_entropy_loss,
+    grad_accum_steps=4  # Accumulate over 4 steps (effectively 4x batch size)
+)
+```
+
+---
+
 ## Examples
 
 Ten complete examples are in the `examples/` folder:
