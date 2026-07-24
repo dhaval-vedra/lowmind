@@ -92,6 +92,7 @@ from .utils.profiler import ModelProfiler
 from .utils.lr_finder import LRFinder
 from .utils.pruner import Pruner
 from .utils.distillation import DistillationTrainer
+from .utils.quantizer import QuantizedTensor, quantize_weight, quantize_model
 
 # ── Pre-built Models ───────────────────────────────────────────────────────────
 from .models.micro_cnn import MicroMLP, MicroCNN, TinyResNet
@@ -148,7 +149,7 @@ __all__ = [
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
     # Advanced Optimizations
-    "Pruner", "DistillationTrainer",
+    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model",
     # Models
     "MicroMLP", "MicroCNN", "TinyResNet",
     # Sub-modules

@@ -129,6 +129,20 @@ class Module:
             total += p.data.size
         return total
 
+    def quantize(self):
+        """
+        Quantize the model weights in-place to simulate INT8 precision.
+        """
+        import numpy as np
+        for name, param in self.named_parameters():
+            if "weight" in name:
+                max_val = np.max(np.abs(param.data))
+                scale = max_val / 127.0 if max_val > 0 else 1.0
+                q_data = np.round(param.data / scale).astype(np.int8)
+                param.data = q_data.astype(np.float32) * scale
+        print("Model quantized to INT8 simulation successfully!")
+        return self
+
     def summary(self):
         """Print a short architecture summary."""
         print(f"{'Module':<30} {'Output Shape':<20} {'Params':>10}")
