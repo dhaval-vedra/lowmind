@@ -1,5 +1,6 @@
-from lowmind import lm
-from numpy import np
+import lowmind as lm
+import numpy as np
+import time
 
 def benchmark_lowmind():
     """Comprehensive performance testing"""

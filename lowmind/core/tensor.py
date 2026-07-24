@@ -51,6 +51,19 @@ class Tensor:
         self.name = name
         self._version = 0
 
+        # Register with memory manager
+        if name:
+            memory_manager.allocate(self, name)
+
+    def __del__(self):
+        if hasattr(self, 'name') and self.name:
+            # Defensive check for interpreter shutdown where memory_manager can be None
+            try:
+                if memory_manager is not None and hasattr(memory_manager, 'free'):
+                    memory_manager.free(self.name)
+            except (NameError, AttributeError, TypeError):
+                pass
+
     # ------------------------------------------------------------------
     # Gradient helpers
     # ------------------------------------------------------------------

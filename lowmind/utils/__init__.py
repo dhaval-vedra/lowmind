@@ -5,6 +5,6 @@ from .metrics import (
 )
 from .trainer import Trainer
 from .callbacks import Callback, EarlyStopping, ModelCheckpoint, LRSchedulerCallback, History
-from .monitor import SystemMonitor, memory_trace
+from .monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .profiler import ModelProfiler
 from .lr_finder import LRFinder

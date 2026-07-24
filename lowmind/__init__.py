@@ -87,7 +87,7 @@ from .utils.callbacks import (
     Callback, EarlyStopping, ModelCheckpoint,
     LRSchedulerCallback, History,
 )
-from .utils.monitor import SystemMonitor, memory_trace
+from .utils.monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .utils.profiler import ModelProfiler
 from .utils.lr_finder import LRFinder
 
@@ -142,7 +142,7 @@ __all__ = [
     "Callback", "EarlyStopping", "ModelCheckpoint",
     "LRSchedulerCallback", "History",
     # Monitoring
-    "SystemMonitor", "memory_trace",
+    "SystemMonitor", "memory_trace", "RaspberryPiAdvancedMonitor",
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
     # Models
