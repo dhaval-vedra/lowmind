@@ -95,6 +95,7 @@ from .utils.distillation import DistillationTrainer
 from .utils.quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_quantize, prepare_qat
 from .utils.checkpoint import checkpoint
 from .utils.accelerator import is_jit_accelerated
+from .utils.onnx_exporter import export_to_onnx
 
 # ── Pre-built Models ───────────────────────────────────────────────────────────
 from .models.micro_cnn import MicroMLP, MicroCNN, TinyResNet
@@ -151,7 +152,7 @@ __all__ = [
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
     # Advanced Optimizations
-    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model", "checkpoint", "is_jit_accelerated", "fake_quantize", "prepare_qat",
+    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model", "checkpoint", "is_jit_accelerated", "fake_quantize", "prepare_qat", "export_to_onnx",
     # Models
     "MicroMLP", "MicroCNN", "TinyResNet",
     # Sub-modules

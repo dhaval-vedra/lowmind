@@ -13,3 +13,4 @@ from .distillation import DistillationTrainer
 from .quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_quantize, prepare_qat
 from .checkpoint import checkpoint
 from .accelerator import is_jit_accelerated, col2im_optimized
+from .onnx_exporter import export_to_onnx

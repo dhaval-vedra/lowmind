@@ -232,6 +232,35 @@ class TestAdvancedOptimizations(unittest.TestCase):
         lm.prepare_qat(model, enabled=False)
         self.assertFalse(getattr(model[0], 'qat_mode', True))
 
+    def test_onnx_exporter(self):
+        """Test exporting LowMind model to standard ONNX format"""
+        print("Testing ONNX Exporter...")
+        import os
+
+        # Create a Sequential model
+        model = lm.Sequential(
+            lm.Linear(10, 20),
+            lm.ReLU(),
+            lm.Linear(20, 3)
+        )
+
+        # Define dummy input
+        dummy_input = np.random.randn(2, 10).astype(np.float32)
+
+        # Target filepath
+        filepath = "test_model.onnx"
+
+        # Export to ONNX
+        onnx_model = lm.export_to_onnx(model, dummy_input, filepath)
+
+        # Check if file exists and has size > 0
+        self.assertTrue(os.path.exists(filepath))
+        self.assertGreater(os.path.getsize(filepath), 0)
+
+        # Cleanup
+        if os.path.exists(filepath):
+            os.remove(filepath)
+
 
 def run_tests():
     print("🧪 Running LowMind Advanced Optimization Tests...")
