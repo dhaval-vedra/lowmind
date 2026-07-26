@@ -454,91 +454,111 @@ lm.memory_manager.get_memory_info()
 ---
 
 <details>
-<summary><h3>⚡ Advanced Model Optimizations for Edge Devices</h3></summary>
+<summary><h3>✂️ Weight Pruning & Sparsity</h3></summary>
 
-LowMind provides built-in cutting-edge optimization techniques to prune, quantize, and compress your models so they can run with blazing speed and ultra-low memory on devices like Raspberry Pi Zero.
-
-#### 1. Weight Pruning & Sparsity
-Zero out low-magnitude weights to compress the model and introduce sparsity.
+Magnitude-based weight pruning API to zero out low-magnitude weights and calculate overall model sparsity.
 
 ```python
 import lowmind as lm
 
-# Initialize model
-model = lm.Sequential(...)
-
-# Create Pruner
+# Create a pruner for your model
 pruner = lm.Pruner(model)
 
-# Prune 50% of the lowest magnitude weights
+# Prune the entire model (skip biases by default) to a target sparsity ratio (0.0 to 1.0)
 pruner.prune_model(sparsity_ratio=0.5)
 
-# Calculate model sparsity percentage
-sparsity = pruner.calculate_sparsity()
-print(f"Model weight sparsity: {sparsity:.2f}%")
+# Prune specific weight parameters of a layer
+pruner.prune_module_weight("fc.weight", sparsity_ratio=0.5)
 
-# Keep weights sparse during training by re-applying masks at step end
+# Re-apply pruning masks (vital to call after optimizer.step() during training)
 optimizer.step()
 pruner.apply_masks()
-```
 
-#### 2. INT8 Model Quantization
-Convert model weights from 32-bit floats (`float32`) to 8-bit integers (`int8`) simulation to achieve up to 75% memory reduction with negligible accuracy loss.
+# Calculate current sparsity percentage of the model
+sparsity_pct = pruner.calculate_sparsity()
+print(f"Model Sparsity: {sparsity_pct:.2f}%")
+```
+</details>
+
+<details>
+<summary><h3>🎯 INT8 Model Quantization</h3></summary>
+
+Post-Training Integer (INT8) Quantization helper to convert float32 weights to simulated 8-bit integer weights.
 
 ```python
-# Quantize model weights in-place to simulate INT8 precision
+import lowmind as lm
+
+# In-place quantization of model weights to simulate 8-bit integers
 model.quantize()
 
-# Alternatively, extract scale factors and quantized representations
-q_tensor, scale = lm.quantize_weight(model[0].weight)
-qt = lm.QuantizedTensor(q_tensor, scale)
-dequant_weight = qt.dequantize()
-```
+# Alternatively, extract integer weights and scale factor of a specific tensor
+q_data, scale = lm.quantize_weight(model[0].weight)
 
-#### 3. Quantization Aware Training (QAT)
+# Wrap quantized data in a container
+quantized_tensor = lm.QuantizedTensor(q_data, scale)
+
+# Convert back to float32 representation
+float_data = quantized_tensor.dequantize()
+```
+</details>
+
+<details>
+<summary><h3>🏋️ Quantization Aware Training (QAT)</h3></summary>
+
 Simulate the effects of 8-bit integer quantization during training using Straight-Through Estimators (STE). This allows the model's weights to adapt and learn quantization robust features, resulting in almost 0% accuracy drop when finally quantized to INT8!
 
 ```python
-# 1. Enable QAT on model layers
+import lowmind as lm
+
+# 1. Enable QAT (Straight-Through Estimators) on all layers of a model
 lm.prepare_qat(model, enabled=True)
 
-# 2. Train model normally using any trainer or custom loop
+# 2. Train the model normally using any trainer or custom loop
 # Standard SGD, Adam, and backpropagation are fully supported
 trainer.fit(loader, epochs=5)
 
-# 3. Disable QAT (optional)
+# 3. Toggle QAT off after training
 lm.prepare_qat(model, enabled=False)
 
 # 4. Perform final INT8 quantization
 model.quantize()
 ```
+</details>
 
-#### 4. Knowledge Distillation
-Train an extremely lightweight student model using the "knowledge" of a larger, pre-trained teacher model.
+<details>
+<summary><h3>🎓 Knowledge Distillation</h3></summary>
+
+Knowledge Distillation Trainer to transfer knowledge from a heavy, pre-trained Teacher model to a lightweight Student model.
 
 ```python
-# Create teacher and student models
-teacher_model = lm.Sequential(...)
-student_model = lm.Sequential(...)
+import lowmind as lm
 
-# Setup DistillationTrainer (combines hard label loss and soft temperature loss)
+# Setup DistillationTrainer (combines hard label loss and soft temperature-scaled loss)
 trainer = lm.DistillationTrainer(
     student_model=student_model,
     teacher_model=teacher_model,
-    optimizer=lm.SGD(student_model.parameters(), lr=0.1),
+    optimizer=optimizer,
     loss_fn=lm.cross_entropy_loss,
-    temperature=3.0,
-    alpha=0.5
+    temperature=3.0,  # Soft target scaling temperature (default 3.0)
+    alpha=0.5,        # Coefficient weight for soft loss vs hard loss (default 0.5)
+    clip_grad=1.0,
+    grad_accum_steps=1,
+    verbose=1
 )
 
-# Distill knowledge
-trainer.fit(train_loader, epochs=10)
+# Train the student model
+history = trainer.fit(train_loader, val_loader, epochs=10)
 ```
+</details>
 
-#### 5. Gradient Accumulation
+<details>
+<summary><h3>🗜️ Gradient Accumulation</h3></summary>
+
 Simulate large batch sizes on low-memory edge devices by accumulating gradients over multiple steps before performing an optimizer update.
 
 ```python
+import lowmind as lm
+
 # Pass grad_accum_steps parameter to Trainer
 trainer = lm.Trainer(
     model=model,
@@ -547,21 +567,48 @@ trainer = lm.Trainer(
     grad_accum_steps=4  # Accumulate over 4 steps (effectively 4x batch size)
 )
 ```
+</details>
 
-#### 6. Gradient Checkpointing
+<details>
+<summary><h3>🛡️ Gradient Checkpointing</h3></summary>
+
 Trade compute for massive memory savings on edge devices. Only save activations at checkpoints and recompute the rest during the backward pass on-the-fly.
 
 ```python
-# Wrap Sequential block or any sub-module function in checkpoint
-out = lm.checkpoint(model, x)
-```
+import lowmind as lm
 
-#### 7. Performance Accelerator
-Utilize blazingly fast memory stride tricks and optional Numba Just-In-Time (JIT) compiler fallback to accelerate k-D convolutions at assembly level speed (10x - 50x speedup!).
+# Wrap Sequential block or any sub-module function in checkpoint
+out = lm.checkpoint(model_block, input_tensor)
+```
+</details>
+
+<details>
+<summary><h3>🚀 Hardware Bottleneck Accelerator</h3></summary>
+
+Check if hardware acceleration is active. Incorporates blazingly fast memory stride tricks and optional Numba Just-In-Time (JIT) compiler fallback to accelerate k-D convolutions at assembly-level speed (10x - 50x speedup!).
 
 ```python
-# Check if hardware acceleration is active
+import lowmind as lm
+
+# Check if hardware JIT/stride acceleration is active on this system
 print("JIT Accelerated:", lm.is_jit_accelerated())
+```
+</details>
+
+<details>
+<summary><h3>🔄 ONNX Model Export</h3></summary>
+
+Exports a LowMind model to standard ONNX format for cross-platform deployment on PyTorch, TensorFlow, ONNX Runtime, TensorRT, or Android/iOS accelerators.
+
+```python
+import lowmind as lm
+import numpy as np
+
+# Define dummy input
+dummy_input = np.random.randn(1, 3, 32, 32).astype(np.float32)
+
+# Export and verify to standard .onnx file
+onnx_model = lm.export_to_onnx(model, dummy_input, "model.onnx")
 ```
 </details>
 
