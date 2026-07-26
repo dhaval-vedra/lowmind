@@ -1,14 +1,18 @@
 """
 LowMind ONNX Exporter — production-grade ONNX model export for edge deployment
 """
-import onnx
-from onnx import helper, TensorProto
 import numpy as np
 from ..core.tensor import Tensor
 from ..core.module import Module
 
 
 def export_to_onnx(model, dummy_input, filepath="model.onnx"):
+    try:
+        import onnx
+        from onnx import helper, TensorProto
+    except ImportError:
+        raise ImportError("The 'onnx' package is required to use the ONNX model exporter. "
+                          "Please install it using: pip install onnx")
     """
     Exports a LowMind model to standard ONNX format.
 
