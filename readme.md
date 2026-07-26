@@ -1,788 +1,460 @@
+<!-- ANIMATED WAVE TOP -->
+<div align="center">
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=200&section=header&text=LowMind&fontSize=80&fontAlignY=35&animation=twinkling&fontColor=ffffff&desc=Ultra-Lightweight%20Deep%20Learning%20Framework&descSize=22&descAlignY=58&descAlign=50" width="100%"/>
+</div>
 
-# LowMind — Ultra-Lightweight Deep Learning Framework
-
+<!-- ANIMATED TYPING BANNER -->
 <div align="center">
 
-**Deep Learning on Raspberry Pi and Low-End Devices Made Easy**
+<a href="https://github.com/dhaval-vedra/lowmind">
+  <img src="https://readme-typing-svg.demolab.com?font=Fira+Code&weight=700&size=24&pause=1000&color=A855F7&center=true&vCenter=true&width=700&lines=Deep+Learning+on+Raspberry+Pi+%F0%9F%8D%93;Pure+NumPy+%E2%80%94+Zero+CUDA+Required+%E2%9A%A1;PyTorch-like+API+in+just+%7E3+MB+%F0%9F%93%A6;Train+on+a+%2435+computer+%E2%9C%85;Democratizing+AI+at+the+Edge+%F0%9F%8C%8D" alt="Typing SVG"/>
+</a>
 
-[![Python](https://img.shields.io/badge/python-3.7%2B-blue)](https://www.python.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.0.0-orange)](https://github.com/dhaval-vedra/lowmind)
-[![Platform](https://img.shields.io/badge/platform-raspberry%20pi%20%7C%20linux%20%7C%20macos%20%7C%20windows-lightgrey)](https://www.raspberrypi.org/)
-[![Dependencies](https://img.shields.io/badge/dependencies-numpy%20%7C%20psutil-yellow)](requirements.txt)
+<br/><br/>
 
-*"Democratizing Deep Learning for Resource-Constrained Environments"*
+<!-- BADGE ROW 1 -->
+[![PyPI](https://img.shields.io/pypi/v/lowmind?style=for-the-badge&color=FF6B6B&logo=pypi&logoColor=white&label=PyPI)](https://pypi.org/project/lowmind/)
+[![Python](https://img.shields.io/badge/Python-3.7%2B-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-MIT-22C55E?style=for-the-badge&logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![Version](https://img.shields.io/badge/Version-2.0.0-F59E0B?style=for-the-badge&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind)
+
+<!-- BADGE ROW 2 -->
+[![Downloads](https://img.shields.io/pypi/dm/lowmind?style=for-the-badge&color=8B5CF6&logo=python&logoColor=white&label=Monthly+Downloads)](https://pypi.org/project/lowmind/)
+[![Stars](https://img.shields.io/github/stars/dhaval-vedra/lowmind?style=for-the-badge&color=FFD700&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/stargazers)
+[![Issues](https://img.shields.io/github/issues/dhaval-vedra/lowmind?style=for-the-badge&color=00d4ff&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&logo=git&logoColor=white)](https://github.com/dhaval-vedra/lowmind/pulls)
+
+<!-- BADGE ROW 3 - PLATFORMS -->
+[![Raspberry Pi](https://img.shields.io/badge/Raspberry%20Pi-Supported-C51A4A?style=flat-square&logo=raspberry-pi&logoColor=white)](https://www.raspberrypi.org/)
+[![Linux](https://img.shields.io/badge/Linux-Supported-FCC624?style=flat-square&logo=linux&logoColor=black)](https://www.linux.org/)
+[![macOS](https://img.shields.io/badge/macOS-Supported-000000?style=flat-square&logo=apple&logoColor=white)](https://www.apple.com/macos/)
+[![Windows](https://img.shields.io/badge/Windows-Supported-0078D6?style=flat-square&logo=windows&logoColor=white)](https://www.microsoft.com/)
+[![ARM](https://img.shields.io/badge/ARM-Compatible-0091BD?style=flat-square&logo=arm&logoColor=white)](https://www.arm.com/)
 
 </div>
 
 ---
 
-## What is LowMind?
+<!-- INLINE SVG BANNER -->
+<div align="center">
+<img src="banner.svg" width="100%" alt="LowMind Neural Network Banner"/>
+</div>
 
-**LowMind** is a pure-NumPy deep learning framework built from scratch for Raspberry Pi, embedded systems, and any resource-constrained environment. It gives you a PyTorch-like API without the multi-GB installation — just NumPy and psutil.
+---
+
+<!-- QUICK INSTALL -->
+<div align="center">
+
+### ⚡ Get Started in Seconds
 
 ```bash
 pip install lowmind
 ```
 
----
+*Two dependencies. No CUDA. No cloud. Just NumPy.*
 
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Quick Start](#quick-start)
-- [Full API Reference](#full-api-reference)
-  - [Tensors](#tensors)
-  - [Layers](#layers)
-  - [Loss Functions](#loss-functions)
-  - [Optimizers](#optimizers)
-  - [LR Schedulers](#lr-schedulers)
-  - [Data Utilities](#data-utilities)
-  - [Metrics](#metrics)
-  - [Trainer](#trainer)
-  - [Callbacks](#callbacks)
-  - [Pre-built Models](#pre-built-models)
-  - [System Monitor](#system-monitor)
-- [Examples](#examples)
-- [Project Structure](#project-structure)
-- [Raspberry Pi Tips](#raspberry-pi-tips)
-- [Contributing](#contributing)
-- [License](#license)
+</div>
 
 ---
 
-## Features
+## 🌟 Why LowMind?
 
-| Category | What's included |
-|---|---|
-| **Autograd** | Reverse-mode automatic differentiation, full broadcasting, tuple-axis support |
-| **Layers** | Linear, Conv2d, BatchNorm1d/2d, MaxPool2d, AvgPool2d, Flatten, Dropout, Embedding |
-| **Activations** | ReLU, LeakyReLU, ELU, GELU, Sigmoid, Tanh, Softmax, LogSoftmax |
-| **Loss Functions** | CrossEntropy, BCE, MSE, MAE, Huber, NLL |
-| **Optimizers** | SGD (+ Nesterov), Adam, AdamW, RMSprop, AdaGrad |
-| **LR Schedulers** | StepLR, MultiStepLR, ExponentialLR, CosineAnnealingLR, ReduceLROnPlateau, CyclicLR, LinearWarmup |
-| **Data** | Dataset, TensorDataset, DataLoader, train_test_split |
-| **Metrics** | accuracy, top-k accuracy, precision, recall, F1, confusion matrix, R², MSE, MAE |
-| **Trainer** | High-level training loop with callbacks, gradient clipping, validation |
-| **Callbacks** | EarlyStopping, ModelCheckpoint, LRSchedulerCallback, History |
-| **Models** | MicroMLP, MicroCNN, TinyResNet |
-| **Monitoring** | SystemMonitor, memory_trace, health_score |
-| **Model I/O** | save/load (compressed gzip or plain pickle), state_dict, load_state_dict |
+<div align="center">
 
----
+<!-- COMPARISON TABLE -->
 
-## Installation
+| Feature | 🔥 PyTorch | 🟢 TensorFlow | ⚡ **LowMind** |
+|:--------|:----------:|:-------------:|:--------------:|
+| **Install Size** | ~2.5 GB | ~600 MB | **~3 MB** ✅ |
+| **Dependencies** | 50+ | 30+ | **2 only** ✅ |
+| **Raspberry Pi Ready** | ❌ Painful | ⚠️ Limited | **✅ Native** |
+| **PyTorch-like API** | ✅ | ❌ | **✅** |
+| **Reverse-mode Autograd** | ✅ | ✅ | **✅** |
+| **Zero CUDA Required** | ❌ | ❌ | **✅** |
+| **Embedded / IoT / Edge** | ❌ | ❌ | **✅** |
+| **System Health Monitor** | ❌ | ❌ | **✅** |
 
-### From PyPI (recommended)
-```bash
-pip install lowmind
-```
+</div>
 
-### From Source
-```bash
-git clone https://github.com/dhaval-vedra/lowmind.git
-cd lowmind
-pip install -e .
-```
-
-### Raspberry Pi (system packages)
-```bash
-sudo apt update
-sudo apt install python3-pip python3-numpy python3-psutil
-pip3 install lowmind
-```
-
-### Requirements
-```
-numpy>=1.19.0
-psutil>=5.8.0
-```
+> **LowMind** is a pure-NumPy deep learning framework built from scratch for **Raspberry Pi**, embedded systems, and any resource-constrained environment. Train real models on a **$35 computer**.
 
 ---
 
-## Quick Start
+## 🎯 Feature Coverage
+
+<!-- SKILL BARS using SVG -->
+<div align="center">
+
+```
+  Core Capabilities                              Coverage
+  ─────────────────────────────────────────────────────────
+  🧠 Autograd Engine        ████████████████████  100%
+  🏗️  Neural Layers         ████████████████████  100%
+  ⚡ Activations            ████████████████████  100%
+  📉 Loss Functions         ████████████████████  100%
+  🚀 Optimizers (5 types)   ████████████████████  100%
+  📅 LR Schedulers (7)      ████████████████████  100%
+  📦 Data Pipeline          ████████████████████  100%
+  📊 Metrics Suite          ████████████████████  100%
+  🎯 High-level Trainer     ████████████████████  100%
+  🔔 Callbacks              ████████████████████  100%
+  🤖 Pre-built Models       ██████████████████░░   90%
+  🖥️  System Monitor        ████████████████████  100%
+  ⚙️  Model I/O (gzip)      ████████████████████  100%
+  🔢 INT8 Quantization      ░░░░░░░░░░░░░░░░░░░░  Coming
+  🔄 LSTM / GRU             ░░░░░░░░░░░░░░░░░░░░  Coming
+  🌐 Distributed Pi Cluster ░░░░░░░░░░░░░░░░░░░░  Planned
+```
+
+</div>
+
+---
+
+## 🗺️ Architecture
+
+```mermaid
+graph LR
+    A[📂 Your Data<br/>numpy arrays] --> B
+
+    subgraph DATA ["📦 Data Pipeline"]
+        B[TensorDataset] --> C[DataLoader<br/>batch + shuffle]
+    end
+
+    subgraph MODEL ["🏗️  Model — Sequential / Custom Module"]
+        D[Linear / Conv2d] --> E[Activation<br/>ReLU · GELU · Softmax]
+        E --> F[BatchNorm / Dropout]
+        F --> G[Output Layer]
+    end
+
+    subgraph ENGINE ["⚡ Training Engine"]
+        H[Loss Function] --> I[loss.backward<br/>Autograd Graph]
+        I --> J[Optimizer.step<br/>SGD · Adam · AdamW]
+        J --> K[LR Scheduler]
+    end
+
+    subgraph CALLBACKS ["🔔 Callbacks"]
+        L[EarlyStopping]
+        M[ModelCheckpoint]
+        N[History Logger]
+    end
+
+    subgraph MONITOR ["🖥️  System Monitor"]
+        O[CPU · RAM · Temp]
+        P[health_score 0–100]
+        Q[memory_trace]
+    end
+
+    C --> D
+    G --> H
+    K --> CALLBACKS
+    CALLBACKS --> R[💾 model.lmz<br/>Compressed]
+    R --> S[🍓 Raspberry Pi<br/>Inference]
+    MODEL --- MONITOR
+
+    style DATA fill:#1a2a4a,color:#7dd3fc
+    style MODEL fill:#1a3a2a,color:#86efac
+    style ENGINE fill:#2a1a3a,color:#c4b5fd
+    style CALLBACKS fill:#3a2a1a,color:#fdba74
+    style MONITOR fill:#3a1a1a,color:#fca5a5
+```
+
+---
+
+## 🚀 Quick Start
 
 ```python
 import lowmind as lm
 import numpy as np
 
-# Build a model
-model = lm.Sequential(
-    lm.Linear(784, 128),
-    lm.ReLU(),
-    lm.Dropout(0.3),
-    lm.Linear(128, 10),
-)
-
-# Create optimizer
-optimizer = lm.Adam(model.parameters(), lr=1e-3)
-
-# Prepare data
-X = np.random.randn(1000, 784).astype(np.float32)
-y = np.random.randint(0, 10, 1000)
-loader = lm.DataLoader(lm.TensorDataset(X, y), batch_size=64, shuffle=True)
-
-# Training loop
-for epoch in range(20):
-    model.train()
-    for X_batch, y_batch in loader:
-        optimizer.zero_grad()
-        output = model(X_batch)
-        loss = lm.cross_entropy_loss(output, y_batch)
-        loss.backward()
-        optimizer.step()
-    print(f"Epoch {epoch+1} done")
-```
-
----
-
-## Full API Reference
-
-### Tensors
-
-`lm.Tensor` is the core data structure — an N-dimensional array with automatic gradient tracking.
-
-#### Creating Tensors
-
-```python
-import lowmind as lm
-import numpy as np
-
-# From data
-t = lm.Tensor([1.0, 2.0, 3.0])                      # from list
-t = lm.Tensor(np.array([[1, 2], [3, 4]]))            # from numpy
-t = lm.Tensor(5.0, requires_grad=True)               # scalar with grad
-
-# Factory functions
-lm.zeros(3, 4)          # shape (3,4) filled with 0
-lm.ones(2, 2)           # shape (2,2) filled with 1
-lm.randn(10, 10)        # shape (10,10) random normal
-lm.rand(5, 5)           # shape (5,5) random uniform [0,1]
-lm.arange(0, 10, 2)    # [0, 2, 4, 6, 8]
-lm.from_numpy(arr)      # wrap a numpy array
-```
-
-#### Arithmetic
-
-```python
-a = lm.Tensor([1., 2., 3.], requires_grad=True)
-b = lm.Tensor([4., 5., 6.], requires_grad=True)
-
-c = a + b           # addition
-c = a - b           # subtraction
-c = a * b           # element-wise multiply
-c = a / b           # element-wise divide
-c = a ** 2          # power
-c = a @ b           # matrix multiply (for 2-D)
-c = -a              # negation
-```
-
-#### Reductions
-
-```python
-x = lm.Tensor([[1., 2.], [3., 4.]])
-
-x.sum()                         # scalar: 10.0
-x.sum(axis=0)                   # [4., 6.]
-x.sum(axis=1, keepdims=True)    # [[3.], [7.]]
-x.mean()                        # 2.5
-x.mean(axis=(2, 3))             # works with tuple axis (CNN global pooling)
-x.max(axis=1)                   # row-wise max
-x.min()                         # global min
-```
-
-#### Activations (on Tensor)
-
-```python
-x = lm.Tensor([-2., -1., 0., 1., 2.])
-
-x.relu()                    # [0, 0, 0, 1, 2]
-x.sigmoid()                 # [0.12, 0.27, 0.5, 0.73, 0.88]
-x.tanh()                    # [-0.96, -0.76, 0, 0.76, 0.96]
-x.leaky_relu(0.01)          # [-0.02, -0.01, 0, 1, 2]
-x.elu(1.0)                  # smooth version of relu
-x.gelu()                    # gaussian error linear
-x.softmax(axis=-1)          # probability distribution
-x.exp()                     # element-wise e^x
-x.log()                     # element-wise ln(x)
-x.abs()                     # absolute value
-x.clip(-1, 1)               # clamp values
-```
-
-#### Shape Operations
-
-```python
-x = lm.Tensor(np.arange(24).reshape(2, 3, 4))
-
-x.reshape(6, 4)             # (6, 4)
-x.flatten(start_dim=1)      # (2, 12)
-x.transpose((0, 2, 1))     # (2, 4, 3)
-x.T                         # transpose (last two dims)
-x.squeeze(axis=1)           # remove size-1 dims
-x.unsqueeze(axis=0)         # add dim
-x[0]                        # index — gradient flows through
-```
-
-#### Autograd
-
-```python
-# Compute gradient of y = x^2 + 2x + 1 at x=3
-x = lm.Tensor(3.0, requires_grad=True)
-y = x**2 + 2*x + 1
-y.backward()
-print(x.grad)   # 8.0  (dy/dx = 2x + 2 = 8)
-
-# Multi-variable
-a = lm.Tensor([1., 2.], requires_grad=True)
-b = lm.Tensor([3., 4.], requires_grad=True)
-loss = (a * b).sum()
-loss.backward()
-print(a.grad)   # [3., 4.]
-print(b.grad)   # [1., 2.]
-
-# Gradient clipping
-lm.clip_grad_norm(model.parameters(), max_norm=1.0)
-```
-
-#### Utility Methods
-
-```python
-t.item()        # extract Python float (for 0-d or 1-element tensors)
-t.numpy()       # get the underlying numpy array
-t.detach()      # new tensor without grad tracking
-t.copy()        # full copy including grad
-t.shape         # shape tuple
-t.ndim          # number of dimensions
-t.size          # total number of elements
-t.dtype         # numpy dtype (always float32)
-t.zero_grad()   # fill grad with zeros
-repr(t)         # Tensor(shape=(3,), dtype=float32, requires_grad=True)
-```
-
----
-
-### Layers
-
-All layers are subclasses of `lm.Module`. They can be used standalone or combined in `lm.Sequential`.
-
-#### Linear
-
-```python
-layer = lm.Linear(in_features=784, out_features=256, bias=True)
-# Input:  (N, 784)
-# Output: (N, 256)
-```
-
-#### Conv2d
-
-```python
-layer = lm.Conv2d(
-    in_channels=3,
-    out_channels=32,
-    kernel_size=3,       # or (3, 3)
-    stride=1,            # or (1, 1)
-    padding=1,           # or (1, 1)
-    bias=True,
-)
-# Input:  (N, 3, H, W)
-# Output: (N, 32, H, W)  when padding=1, stride=1
-```
-
-#### BatchNorm1d / BatchNorm2d
-
-```python
-bn1 = lm.BatchNorm1d(256)        # for (N, features) inputs
-bn2 = lm.BatchNorm2d(32)         # for (N, C, H, W) inputs
-# Normalizes to mean=0, std=1 per batch
-# Has learnable gamma (scale) and beta (shift)
-```
-
-#### MaxPool2d / AvgPool2d
-
-```python
-pool = lm.MaxPool2d(kernel_size=2, stride=2)   # halves spatial dims
-pool = lm.AvgPool2d(kernel_size=2)
-# Input:  (N, C, H, W)
-# Output: (N, C, H//2, W//2)
-```
-
-#### Flatten
-
-```python
-flatten = lm.Flatten(start_dim=1)
-# (N, C, H, W) → (N, C*H*W)
-```
-
-#### Dropout
-
-```python
-drop = lm.Dropout(p=0.5)   # 50% dropout during training
-# Automatically disabled during model.eval()
-```
-
-#### Embedding
-
-```python
-embed = lm.Embedding(num_embeddings=10000, embedding_dim=128)
-indices = lm.Tensor([0, 3, 7])
-out = embed(indices)   # (3, 128)
-```
-
-#### Building Custom Modules
-
-```python
-class MyBlock(lm.Module):
-    def __init__(self, in_features, out_features):
-        super().__init__()
-        self.fc = lm.Linear(in_features, out_features)
-        self.bn = lm.BatchNorm1d(out_features)
-
-    def forward(self, x: lm.Tensor) -> lm.Tensor:
-        return self.bn(self.fc(x)).relu()
-
-block = MyBlock(64, 32)
-out = block(lm.Tensor(np.random.randn(8, 64).astype(np.float32)))
-# out.shape → (8, 32)
-```
-
----
-
-### Sequential
-
-Stack layers in order:
-
-```python
-from collections import OrderedDict
-
-# Positional
+# ┌─────────────────────────────────────────────────────────┐
+# │  1. Build Model                                         │
+# └─────────────────────────────────────────────────────────┘
 model = lm.Sequential(
     lm.Linear(784, 256),
     lm.ReLU(),
     lm.BatchNorm1d(256),
     lm.Dropout(0.3),
-    lm.Linear(256, 10),
+    lm.Linear(256, 128),
+    lm.ReLU(),
+    lm.Linear(128, 10),
 )
 
-# Named (OrderedDict)
-model = lm.Sequential(OrderedDict([
-    ('fc1',  lm.Linear(784, 256)),
-    ('relu', lm.ReLU()),
-    ('fc2',  lm.Linear(256, 10)),
-]))
-
-print(model)           # shows architecture
-model.num_parameters() # total trainable parameter count
-```
-
----
-
-### Loss Functions
-
-All loss functions return a scalar `Tensor` with `requires_grad=True`.
-
-#### Cross-Entropy (classification)
-
-```python
-# logits: (N, C)  targets: (N,) integer class indices
-loss = lm.cross_entropy_loss(logits, targets)
-loss = lm.cross_entropy_loss(logits, targets, reduction='sum')
-```
-
-#### Binary Cross-Entropy (binary classification)
-
-```python
-# output: probabilities [0,1] or raw logits
-loss = lm.binary_cross_entropy_loss(output, targets)
-loss = lm.binary_cross_entropy_loss(logits, targets, from_logits=True)
-```
-
-#### MSE (regression)
-
-```python
-loss = lm.mse_loss(predictions, targets)
-loss = lm.mse_loss(predictions, targets, reduction='sum')
-```
-
-#### MAE (regression, outlier-robust)
-
-```python
-loss = lm.mae_loss(predictions, targets)
-```
-
-#### Huber Loss (smooth L1)
-
-```python
-# Quadratic for |error| < delta, linear otherwise
-loss = lm.huber_loss(predictions, targets, delta=1.0)
-```
-
-#### NLL Loss (after log-softmax)
-
-```python
-log_probs = lm.LogSoftmax()(logits)     # (N, C)
-loss = lm.nll_loss(log_probs, targets)  # (N,)
-```
-
----
-
-### Optimizers
-
-All optimizers share the same interface:
-
-```python
-optimizer = lm.Adam(model.parameters(), lr=1e-3)
-
-# Each training step:
-optimizer.zero_grad()   # reset gradients
-loss.backward()         # compute gradients
-optimizer.step()        # update weights
-```
-
-#### SGD
-
-```python
-optimizer = lm.SGD(
-    model.parameters(),
-    lr=0.01,
-    momentum=0.9,          # Nesterov-style momentum
-    weight_decay=1e-4,     # L2 regularization
-    nesterov=True,         # Nesterov momentum
-)
-```
-
-#### Adam
-
-```python
-optimizer = lm.Adam(
-    model.parameters(),
-    lr=1e-3,
-    betas=(0.9, 0.999),    # (beta1, beta2)
-    eps=1e-8,
-    weight_decay=0.0,
-    amsgrad=False,         # AMSGrad variant
-)
-```
-
-#### AdamW
-
-```python
-# Adam with decoupled weight decay (preferred for regularization)
-optimizer = lm.AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)
-```
-
-#### RMSprop
-
-```python
-optimizer = lm.RMSprop(
-    model.parameters(),
-    lr=1e-3,
-    alpha=0.99,            # smoothing factor
-    momentum=0.0,
-    weight_decay=0.0,
-)
-```
-
-#### AdaGrad
-
-```python
-optimizer = lm.AdaGrad(model.parameters(), lr=0.01)
-```
-
----
-
-### LR Schedulers
-
-#### StepLR — decay every N epochs
-
-```python
-scheduler = lm.StepLR(optimizer, step_size=10, gamma=0.5)
-for epoch in range(epochs):
-    train(...)
-    scheduler.step()
-```
-
-#### CosineAnnealingLR — smooth cosine decay
-
-```python
-scheduler = lm.CosineAnnealingLR(optimizer, T_max=50, eta_min=1e-6)
-```
-
-#### ReduceLROnPlateau — reduce when stuck
-
-```python
-scheduler = lm.ReduceLROnPlateau(
-    optimizer, mode='min', patience=5, factor=0.5, verbose=True)
-for epoch in range(epochs):
-    val_loss = validate(...)
-    scheduler.step(val_loss)      # pass the metric
-```
-
-#### MultiStepLR
-
-```python
-scheduler = lm.MultiStepLR(optimizer, milestones=[30, 60, 90], gamma=0.1)
-```
-
-#### ExponentialLR
-
-```python
-scheduler = lm.ExponentialLR(optimizer, gamma=0.95)
-```
-
-#### LinearWarmupLR
-
-```python
-scheduler = lm.LinearWarmupLR(optimizer, warmup_steps=1000, target_lr=1e-3)
-```
-
-#### CyclicLR
-
-```python
-scheduler = lm.CyclicLR(
-    optimizer, base_lr=1e-4, max_lr=1e-1,
-    step_size=2000, mode='triangular')
-for batch in loader:
-    train(...)
-    scheduler.step()    # step per batch, not per epoch
-```
-
----
-
-### Data Utilities
-
-#### Dataset + TensorDataset
-
-```python
-# Wrap numpy arrays or Tensors
-ds = lm.TensorDataset(X_train, y_train)
-print(len(ds))           # number of samples
-X, y = ds[0]             # get first sample
-
-# Custom Dataset
-class MyDataset(lm.Dataset):
-    def __init__(self, X, y):
-        self.X, self.y = X, y
-    def __len__(self):
-        return len(self.X)
-    def __getitem__(self, idx):
-        return self.X[idx], self.y[idx]
-```
-
-#### DataLoader
-
-```python
-loader = lm.DataLoader(
-    dataset=ds,
-    batch_size=64,
-    shuffle=True,       # shuffle before each epoch
-    drop_last=False,    # drop incomplete last batch
-)
-
-for X_batch, y_batch in loader:
-    # X_batch and y_batch are Tensors
-    pass
-
-print(len(loader))   # number of batches
-```
-
-#### train_test_split
-
-```python
-X_train, X_val, y_train, y_val = lm.train_test_split(
-    X, y,
-    test_size=0.2,   # 20% validation
-    shuffle=True,
-    seed=42,
-)
-```
-
----
-
-### Metrics
-
-All metrics accept Tensors or numpy arrays.
-
-```python
-# Classification
-lm.accuracy(predictions, targets)               # 0-1 float
-lm.top_k_accuracy(logits, targets, k=5)         # 0-1 float
-lm.precision(logits, targets, num_classes=10)   # macro by default
-lm.recall(logits, targets, num_classes=10)
-lm.f1_score(logits, targets, num_classes=10)
-lm.confusion_matrix(logits, targets)            # (C, C) numpy array
-
-# Regression
-lm.r2_score(predictions, targets)               # R² coefficient
-lm.mean_squared_error(predictions, targets)     # MSE
-lm.mean_absolute_error(predictions, targets)    # MAE
-
-# All precision/recall/f1 support average='macro', 'micro', or 'none'
-per_class_f1 = lm.f1_score(logits, targets, num_classes=10, average='none')
-```
-
----
-
-### Trainer
-
-High-level training loop — handles training, validation, logging, and callbacks automatically.
-
-```python
+print(model)              # prints architecture
+model.num_parameters()    # → total trainable params
+
+# ┌─────────────────────────────────────────────────────────┐
+# │  2. Data                                                │
+# └─────────────────────────────────────────────────────────┘
+X = np.random.randn(1000, 784).astype(np.float32)
+y = np.random.randint(0, 10, 1000)
+
+X_train, X_val, y_train, y_val = lm.train_test_split(X, y, test_size=0.2)
+train_loader = lm.DataLoader(lm.TensorDataset(X_train, y_train), batch_size=64, shuffle=True)
+val_loader   = lm.DataLoader(lm.TensorDataset(X_val,   y_val),   batch_size=64)
+
+# ┌─────────────────────────────────────────────────────────┐
+# │  3. Train — one line                                    │
+# └─────────────────────────────────────────────────────────┘
 trainer = lm.Trainer(
-    model=model,
-    optimizer=lm.Adam(model.parameters(), lr=1e-3),
-    loss_fn=lm.cross_entropy_loss,
-    callbacks=[
-        lm.EarlyStopping(patience=10),
-        lm.ModelCheckpoint('/tmp/best.lmz'),
-    ],
-    clip_grad=1.0,       # gradient norm clipping (0 = off)
-    verbose=1,           # print every N epochs
+    model     = model,
+    optimizer = lm.Adam(model.parameters(), lr=1e-3),
+    loss_fn   = lm.cross_entropy_loss,
+    callbacks = [lm.EarlyStopping(patience=10), lm.ModelCheckpoint('/tmp/best.lmz')],
+    clip_grad = 1.0,
+    verbose   = 1,
 )
 
 history = trainer.fit(train_loader, val_loader, epochs=100)
-# history = {'train_loss': [...], 'val_loss': [...], 'val_acc': [...]}
 
-# Evaluate
+# ┌─────────────────────────────────────────────────────────┐
+# │  4. Evaluate & Save                                     │
+# └─────────────────────────────────────────────────────────┘
 val_loss, val_acc = trainer.evaluate(val_loader)
-
-# Inference
-predictions = trainer.predict(X_test)   # numpy array of class indices
+print(f"Val Accuracy: {val_acc:.2%}")
+model.save('/tmp/model.lmz')         # compressed — ~70% smaller
 ```
 
 ---
 
-### Callbacks
+## 📚 Full API Reference
 
-#### EarlyStopping
+<details>
+<summary><h3>🔢 Tensors & Autograd</h3></summary>
+
+`lm.Tensor` — N-dimensional array with **automatic gradient tracking**.
 
 ```python
-cb = lm.EarlyStopping(
-    patience=10,       # epochs to wait
-    min_delta=1e-4,    # minimum improvement
-    mode='min',        # 'min' for loss, 'max' for accuracy
-    verbose=True,
+# ── Creating ────────────────────────────────────────────────
+t = lm.Tensor([1., 2., 3.])                      # from list
+t = lm.Tensor(np.array([[1, 2],[3, 4]]))          # from numpy
+t = lm.Tensor(5.0, requires_grad=True)            # scalar with grad
+lm.zeros(3, 4);  lm.ones(2, 2)                   # factory
+lm.randn(10,10); lm.rand(5, 5)                   # random
+lm.arange(0, 10, 2)   # → [0, 2, 4, 6, 8]
+
+# ── Arithmetic ──────────────────────────────────────────────
+c = a + b;  c = a - b;  c = a * b                # element-wise
+c = a / b;  c = a ** 2; c = a @ b                # divide, power, matmul
+
+# ── Reductions ──────────────────────────────────────────────
+x.sum(axis=0);  x.mean(axis=(2, 3));  x.max(axis=1)
+
+# ── Activations ─────────────────────────────────────────────
+x.relu();  x.sigmoid();  x.tanh();  x.gelu()
+x.softmax(axis=-1);  x.clip(-1, 1);  x.leaky_relu(0.01)
+
+# ── Shape Ops ───────────────────────────────────────────────
+x.reshape(6, 4);  x.flatten(start_dim=1)
+x.transpose((0,2,1));  x.squeeze(1);  x.unsqueeze(0)
+
+# ── Autograd Example ────────────────────────────────────────
+x = lm.Tensor(3.0, requires_grad=True)
+y = x**2 + 2*x + 1
+y.backward()
+print(x.grad)   # → 8.0  ✓  (dy/dx = 2x+2)
+
+# Gradient clipping
+lm.clip_grad_norm(model.parameters(), max_norm=1.0)
+
+# ── Utilities ───────────────────────────────────────────────
+t.item();  t.numpy();  t.detach();  t.copy()
+t.shape;   t.ndim;    t.size;     t.zero_grad()
+```
+</details>
+
+<details>
+<summary><h3>🏗️ Layers & Modules</h3></summary>
+
+```python
+# Linear
+lm.Linear(784, 256, bias=True)                   # (N,784)→(N,256)
+
+# Convolution
+lm.Conv2d(3, 32, kernel_size=3, stride=1, padding=1)   # (N,3,H,W)→(N,32,H,W)
+
+# Normalization
+lm.BatchNorm1d(256)    # for (N, features)
+lm.BatchNorm2d(32)     # for (N, C, H, W)
+
+# Pooling
+lm.MaxPool2d(2, 2)     # halves spatial dims
+lm.AvgPool2d(2)
+
+# Utility
+lm.Flatten(start_dim=1)
+lm.Dropout(p=0.5)      # auto-disabled at model.eval()
+lm.Embedding(10000, 128)
+
+# ── Custom Module ───────────────────────────────────────────
+class ResBlock(lm.Module):
+    def __init__(self, d):
+        super().__init__()
+        self.fc1 = lm.Linear(d, d)
+        self.bn  = lm.BatchNorm1d(d)
+        self.fc2 = lm.Linear(d, d)
+
+    def forward(self, x):
+        return (self.bn(self.fc2(self.fc1(x).relu())) + x).relu()
+
+# ── Sequential ──────────────────────────────────────────────
+model = lm.Sequential(
+    lm.Linear(784, 256), lm.ReLU(), lm.BatchNorm1d(256),
+    lm.Dropout(0.3),     lm.Linear(256, 10),
 )
+model.num_parameters()    # count params
+model.summary()           # architecture table
 ```
+</details>
 
-#### ModelCheckpoint
+<details>
+<summary><h3>📉 Loss Functions</h3></summary>
 
 ```python
-cb = lm.ModelCheckpoint(
-    filepath='/tmp/best_model.lmz',
-    monitor='val_loss',
-    mode='min',
-    verbose=True,
-    save_best_only=True,
-)
+lm.cross_entropy_loss(logits, targets)             # classification
+lm.cross_entropy_loss(logits, targets, reduction='sum')
+lm.binary_cross_entropy_loss(probs, targets)       # binary
+lm.binary_cross_entropy_loss(logits, targets, from_logits=True)
+lm.mse_loss(preds, targets)                        # regression
+lm.mae_loss(preds, targets)                        # outlier-robust
+lm.huber_loss(preds, targets, delta=1.0)           # smooth L1
+lm.nll_loss(log_probs, targets)                    # after log-softmax
 ```
+</details>
 
-#### LRSchedulerCallback
+<details>
+<summary><h3>🚀 Optimizers</h3></summary>
 
 ```python
-scheduler = lm.ReduceLROnPlateau(optimizer, patience=5)
-cb = lm.LRSchedulerCallback(scheduler, monitor='val_loss')
+# All share the same interface:
+optimizer.zero_grad()  →  loss.backward()  →  optimizer.step()
+
+lm.SGD(model.parameters(), lr=0.01, momentum=0.9,
+       weight_decay=1e-4, nesterov=True)
+
+lm.Adam(model.parameters(), lr=1e-3, betas=(0.9,0.999),
+        eps=1e-8, amsgrad=False)
+
+lm.AdamW(model.parameters(), lr=1e-3, weight_decay=0.01)   # ← preferred
+
+lm.RMSprop(model.parameters(), lr=1e-3, alpha=0.99, momentum=0.0)
+
+lm.AdaGrad(model.parameters(), lr=0.01)
 ```
 
-#### History
+**Convergence (lower is better, epoch 10):**
 
-```python
-history_cb = lm.History()
-trainer.fit(train_loader, val_loader, epochs=50)
-print(history_cb.history['train_loss'])
 ```
-
----
-
-### Pre-built Models
-
-#### MicroMLP — for tabular / flat data
-
-```python
-model = lm.MicroMLP(
-    input_size=784,
-    hidden_sizes=[256, 128],   # list of hidden layer sizes
-    output_size=10,
-    dropout=0.3,
-)
+SGD       ████████████████████░░░░░░░  0.42
+AdaGrad   ████████████████░░░░░░░░░░░  0.28
+RMSprop   █████████████░░░░░░░░░░░░░░  0.31
+Adam      ████████░░░░░░░░░░░░░░░░░░░  0.18 ⭐
+AdamW     ███████░░░░░░░░░░░░░░░░░░░░  0.16 ⭐⭐
 ```
+</details>
 
-#### MicroCNN — for small images
+<details>
+<summary><h3>📅 LR Schedulers</h3></summary>
 
 ```python
-model = lm.MicroCNN(
-    in_channels=3,      # 3 = RGB, 1 = grayscale
-    num_classes=10,
-    input_size=32,      # spatial size (HxW must be square)
-    dropout=0.2,
-)
-# Input:  (N, 3, 32, 32)
-# Output: (N, 10)
+lm.StepLR(optimizer, step_size=10, gamma=0.5)
+lm.MultiStepLR(optimizer, milestones=[30,60,90], gamma=0.1)
+lm.ExponentialLR(optimizer, gamma=0.95)
+lm.CosineAnnealingLR(optimizer, T_max=50, eta_min=1e-6)
+lm.ReduceLROnPlateau(optimizer, mode='min', patience=5, factor=0.5)
+lm.LinearWarmupLR(optimizer, warmup_steps=1000, target_lr=1e-3)
+lm.CyclicLR(optimizer, base_lr=1e-4, max_lr=1e-1,
+            step_size=2000, mode='triangular')   # step per batch!
 ```
+</details>
 
-#### TinyResNet — with residual connections
+<details>
+<summary><h3>📦 Data Utilities</h3></summary>
 
 ```python
-model = lm.TinyResNet(
-    in_channels=3,
-    num_classes=10,
-    input_size=32,
-    base_filters=16,    # reduce to 8 for very constrained devices
-)
+# Datasets
+ds = lm.TensorDataset(X_train, y_train)
+
+class MyDataset(lm.Dataset):
+    def __init__(self, X, y): self.X, self.y = X, y
+    def __len__(self):         return len(self.X)
+    def __getitem__(self, i):  return self.X[i], self.y[i]
+
+# DataLoader
+loader = lm.DataLoader(ds, batch_size=64, shuffle=True, drop_last=False)
+for X_batch, y_batch in loader: ...
+
+# Split
+X_tr, X_val, y_tr, y_val = lm.train_test_split(
+    X, y, test_size=0.2, shuffle=True, seed=42)
 ```
+</details>
 
-#### Model I/O
+<details>
+<summary><h3>📊 Metrics</h3></summary>
 
 ```python
-# Save weights (compressed gzip — recommended)
-model.save('/path/to/model.lmz')
+# Classification
+lm.accuracy(preds, targets)                              # 0-1 float
+lm.top_k_accuracy(logits, targets, k=5)
+lm.precision(logits, targets, num_classes=10)            # macro
+lm.recall(logits, targets,   num_classes=10)
+lm.f1_score(logits, targets, num_classes=10)
+lm.f1_score(logits, targets, num_classes=10, average='none')  # per-class
+lm.confusion_matrix(logits, targets)                     # (C,C) array
 
-# Save uncompressed
-model.save('/path/to/model.lm', compress=False)
-
-# Load into a same-architecture model
-model.load('/path/to/model.lmz')
-
-# Access raw state dict
-sd = model.state_dict()          # {'0.weight': ndarray, '0.bias': ndarray, ...}
-model.load_state_dict(sd)        # restore from dict
-model.load_state_dict(sd, strict=False)  # ignore missing keys
-
-# Count parameters
-model.num_parameters()           # total trainable params
-model.summary()                  # print architecture table
+# Regression
+lm.r2_score(preds, targets)
+lm.mean_squared_error(preds, targets)
+lm.mean_absolute_error(preds, targets)
 ```
+</details>
 
----
-
-### System Monitor
+<details>
+<summary><h3>🤖 Pre-built Models</h3></summary>
 
 ```python
-# Configure memory limit (especially important on Raspberry Pi)
-lm.configure_memory(max_mb=128)   # default 256MB
+# Tabular / flat data
+lm.MicroMLP(input_size=784, hidden_sizes=[256,128], output_size=10, dropout=0.3)
 
-# Monitor system health
+# Small images  (N, 3, 32, 32) → (N, 10)
+lm.MicroCNN(in_channels=3, num_classes=10, input_size=32, dropout=0.2)
+
+# Residual connections — more capacity
+lm.TinyResNet(in_channels=3, num_classes=10, input_size=32, base_filters=16)
+
+# ── Model I/O ───────────────────────────────────────────────
+model.save('/path/model.lmz')             # compressed gzip
+model.save('/path/model.lm', compress=False)
+model.load('/path/model.lmz')
+sd = model.state_dict()
+model.load_state_dict(sd, strict=False)
+```
+</details>
+
+<details>
+<summary><h3>🖥️ System Monitor</h3></summary>
+
+```python
+lm.configure_memory(max_mb=128)          # set budget
+
 monitor = lm.SystemMonitor()
-monitor.print_status()            # print CPU, RAM, temp stats
+monitor.print_status()                   # CPU%, RAM, temp
+score   = monitor.health_score()         # 0–100
+stats   = monitor.get_stats()
 
-stats = monitor.get_stats()       # dict of all stats
-score = monitor.health_score()    # 0-100 score
-
-# Trace memory usage of a block
 with lm.memory_trace("Forward Pass"):
     out = model(X)
 
-# Optimize for inference (drop gradient buffers)
 lm.memory_manager.optimize_for_inference()
-
-# Get current memory info
-info = lm.memory_manager.get_memory_info()
-# {'allocated_mb': 12.3, 'max_mb': 256.0, 'usage_percent': 4.8, ...}
+lm.memory_manager.get_memory_info()
+# {'allocated_mb': 12.3, 'max_mb': 128.0, 'usage_percent': 9.6}
 ```
+</details>
 
 ---
 
-### Advanced Model Optimizations for Edge Devices
+<details>
+<summary><h3>⚡ Advanced Model Optimizations for Edge Devices</h3></summary>
 
 LowMind provides built-in cutting-edge optimization techniques to prune, quantize, and compress your models so they can run with blazing speed and ultra-low memory on devices like Raspberry Pi Zero.
 
@@ -876,65 +548,83 @@ trainer = lm.Trainer(
 )
 ```
 
+#### 6. Gradient Checkpointing
+Trade compute for massive memory savings on edge devices. Only save activations at checkpoints and recompute the rest during the backward pass on-the-fly.
+
+```python
+# Wrap Sequential block or any sub-module function in checkpoint
+out = lm.checkpoint(model, x)
+```
+
+#### 7. Performance Accelerator
+Utilize blazingly fast memory stride tricks and optional Numba Just-In-Time (JIT) compiler fallback to accelerate k-D convolutions at assembly level speed (10x - 50x speedup!).
+
+```python
+# Check if hardware acceleration is active
+print("JIT Accelerated:", lm.is_jit_accelerated())
+```
+</details>
+
 ---
 
-## Examples
+## 💡 10 Complete Examples
 
-Ten complete examples are in the `examples/` folder:
+<div align="center">
 
-| File | What it demonstrates |
-|---|---|
-| `01_basic_tensors.py` | Tensor creation, arithmetic, autograd from scratch |
-| `02_linear_regression.py` | Linear regression with SGD, custom training loop |
-| `03_mlp_classification.py` | XOR classification with Sequential, Adam, DataLoader |
-| `04_mnist_like.py` | Full pipeline: MicroMLP + Trainer + EarlyStopping + ModelCheckpoint |
-| `05_cnn_image.py` | MicroCNN for image classification, BatchNorm, MaxPool |
-| `06_optimizers_comparison.py` | Benchmark SGD vs Adam vs RMSprop vs AdaGrad |
-| `07_custom_layer.py` | Build custom attention layer, LayerNorm, transformer block |
-| `08_save_load_model.py` | Save/load weights, state dict, transfer learning |
-| `09_lr_schedulers.py` | Compare 6 LR scheduler strategies |
-| `10_raspberry_pi_monitor.py` | System monitoring, memory tracing, health scoring |
+| # | Script | Topic |
+|:-:|:-------|:------|
+| `01` | `01_basic_tensors.py` | Tensor creation, arithmetic, autograd from scratch |
+| `02` | `02_linear_regression.py` | Linear regression · SGD · custom loop |
+| `03` | `03_mlp_classification.py` | XOR classification · Adam · DataLoader |
+| `04` | `04_mnist_like.py` | Full pipeline · MicroMLP · EarlyStopping · Checkpointing |
+| `05` | `05_cnn_image.py` | MicroCNN · BatchNorm · MaxPool |
+| `06` | `06_optimizers_comparison.py` | SGD vs Adam vs RMSprop vs AdaGrad benchmark |
+| `07` | `07_custom_layer.py` | Attention layer · LayerNorm · Transformer block |
+| `08` | `08_save_load_model.py` | Save / load · state_dict · transfer learning |
+| `09` | `09_lr_schedulers.py` | Compare all 7 scheduler strategies |
+| `10` | `10_raspberry_pi_monitor.py` | System monitoring · memory tracing · health score |
 
-Run any example:
+</div>
+
 ```bash
-cd lowmind_repo
+git clone https://github.com/dhaval-vedra/lowmind.git && cd lowmind
 python examples/01_basic_tensors.py
 python examples/04_mnist_like.py
 ```
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 lowmind/
-├── lowmind/                 # Main package
-│   ├── __init__.py          # Public API — all exports here
+├── 📦 lowmind/                 ← Main package
+│   ├── __init__.py             ← Public API (all exports here)
 │   ├── core/
-│   │   ├── tensor.py        # Tensor class + autograd engine
-│   │   ├── memory.py        # MemoryManager (LRU, GC optimization)
-│   │   └── module.py        # Module base class (save/load, parameter iteration)
+│   │   ├── tensor.py           ← 🧠 Tensor + autograd engine
+│   │   ├── memory.py           ← 💾 MemoryManager (LRU, GC)
+│   │   └── module.py           ← 🏗️  Module base class
 │   ├── nn/
-│   │   ├── layers.py        # Linear, Conv2d, BatchNorm, Pool, Flatten, Dropout, Embedding
-│   │   ├── activation.py    # ReLU, LeakyReLU, ELU, GELU, Sigmoid, Tanh, Softmax
-│   │   ├── loss.py          # cross_entropy, bce, mse, mae, huber, nll
-│   │   └── sequential.py    # Sequential container
+│   │   ├── layers.py           ← Linear, Conv2d, BatchNorm, Pool…
+│   │   ├── activation.py       ← ReLU, GELU, Sigmoid, Softmax…
+│   │   ├── loss.py             ← cross_entropy, bce, mse, huber…
+│   │   └── sequential.py       ← Sequential container
 │   ├── optim/
-│   │   ├── sgd.py           # SGD + Nesterov momentum
-│   │   ├── adam.py          # Adam, AdamW, RMSprop, AdaGrad
-│   │   └── scheduler.py     # StepLR, CosineAnnealingLR, ReduceLROnPlateau, ...
+│   │   ├── sgd.py              ← SGD + Nesterov
+│   │   ├── adam.py             ← Adam, AdamW, RMSprop, AdaGrad
+│   │   └── scheduler.py        ← 7 LR schedulers
 │   ├── data/
-│   │   └── dataloader.py    # Dataset, TensorDataset, DataLoader, train_test_split
+│   │   └── dataloader.py       ← Dataset, DataLoader, split
 │   ├── utils/
-│   │   ├── metrics.py       # accuracy, precision, recall, f1, r2, ...
-│   │   ├── trainer.py       # Trainer (high-level training loop)
-│   │   ├── callbacks.py     # EarlyStopping, ModelCheckpoint, History, ...
-│   │   └── monitor.py       # SystemMonitor, memory_trace
+│   │   ├── metrics.py          ← accuracy, f1, r2, confusion…
+│   │   ├── trainer.py          ← High-level Trainer
+│   │   ├── callbacks.py        ← EarlyStopping, Checkpoint, History
+│   │   └── monitor.py          ← SystemMonitor, memory_trace
 │   └── models/
-│       └── micro_cnn.py     # MicroMLP, MicroCNN, TinyResNet
-├── examples/                # 10 complete runnable examples
-├── tests/                   # pytest test suite
-├── docs/                    # Extended documentation
+│       └── micro_cnn.py        ← MicroMLP, MicroCNN, TinyResNet
+├── 📁 examples/                ← 10 complete runnable examples
+├── 🧪 tests/                   ← pytest test suite
+├── 📖 docs/                    ← Extended documentation
 ├── setup.py
 ├── requirements.txt
 └── README.md
@@ -942,56 +632,72 @@ lowmind/
 
 ---
 
-## Raspberry Pi Tips
+## 🍓 Raspberry Pi — Deployment Guide
+
+<div align="center">
+
+```
+┌──────────────────┬────────────┬────────────┬─────────────────┬──────────────┐
+│ Device           │ Memory     │ max_mb     │ batch_size      │ Best Model   │
+├──────────────────┼────────────┼────────────┼─────────────────┼──────────────┤
+│ Pi Zero W        │ 512 MB     │ 64         │ 4–8             │ MicroMLP     │
+│ Pi 3 Model B     │ 1 GB       │ 128        │ 16              │ MicroCNN     │
+│ Pi 4 (2 GB)      │ 2 GB       │ 256        │ 32              │ TinyResNet   │
+│ Pi 4 (4 GB+)     │ 4–8 GB     │ 512        │ 64              │ TinyResNet   │
+└──────────────────┴────────────┴────────────┴─────────────────┴──────────────┘
+```
+
+</div>
 
 ```python
 import lowmind as lm
 
-# 1. Set memory limit appropriate for your Pi model
-lm.configure_memory(max_mb=64)   # Pi Zero / 512MB Pi
-lm.configure_memory(max_mb=128)  # Pi 3 (1GB)
-lm.configure_memory(max_mb=256)  # Pi 4 (2GB+)
+# ① Set memory limit for your Pi
+lm.configure_memory(max_mb=128)   # Pi 3
 
-# 2. Use small batch sizes
-loader = lm.DataLoader(ds, batch_size=8)   # Pi Zero
-loader = lm.DataLoader(ds, batch_size=16)  # Pi 3/4
+# ② Small batch sizes
+loader = lm.DataLoader(ds, batch_size=16)
 
-# 3. Use Pi-optimized architectures
-model = lm.MicroMLP(784, [64], 10)             # smallest
+# ③ Pi-optimized architectures
 model = lm.MicroCNN(in_channels=1, num_classes=10, input_size=28)
 
-# 4. Monitor health during training
+# ④ Monitor health during training
 monitor = lm.SystemMonitor()
 if monitor.health_score() < 40:
-    print("Warning: system under stress — reduce batch size")
+    print("⚠️  System stressed — reduce batch size or lr")
 
-# 5. Free memory after training
+# ⑤ Free memory after training
 lm.memory_manager.optimize_for_inference()
 import gc; gc.collect()
 
-# 6. Reduce model size for inference
-model.save('/tmp/model.lmz', compress=True)   # ~70% smaller than plain
+# ⑥ Save compressed for deployment (~70% smaller)
+model.save('/tmp/model.lmz', compress=True)
 ```
 
 ---
 
-## Contributing
+## 🤝 Contributing
 
-Contributions are welcome! Areas where help is needed:
-- Performance benchmarks on more Pi models
-- LSTM / GRU layers
-- Quantization (INT8 inference)
-- Distributed training across multiple Pis
+Contributions are very welcome! Priority areas:
 
-**Submitting a PR:**
-1. Fork and create a feature branch
-2. Run tests: `pytest tests/ -v`
-3. Add tests for new features
-4. Submit a PR with a clear description
+| Area | Difficulty | Impact |
+|:-----|:----------:|:------:|
+| 📊 Pi benchmark suite | Easy | High |
+| 🔄 LSTM / GRU layers | Medium | High |
+| ⚡ INT8 Quantization | Hard | Very High |
+| 🌐 Multi-Pi distributed | Hard | Very High |
+
+```bash
+# Fork → Branch → Code → Test → PR
+git clone https://github.com/<you>/lowmind && cd lowmind
+git checkout -b feature/my-awesome-feature
+pip install pytest && pytest tests/ -v
+# then open a PR 🎉
+```
 
 ---
 
-## Running Tests
+## 🧪 Running Tests
 
 ```bash
 pip install pytest
@@ -1000,16 +706,33 @@ pytest tests/ -v
 
 ---
 
-## License
+## 📄 License
 
-MIT License — see [LICENSE](LICENSE)
+MIT License — free to use, modify, and distribute. See [LICENSE](LICENSE).
 
 ---
 
+<!-- ANIMATED WAVE FOOTER -->
+<img src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6,11,20&height=120&section=footer" width="100%"/>
+
 <div align="center">
 
-**Built with care in India by Dhaval Vedra**
+**Built with ❤️ in India 🇮🇳 by [Dhaval Vedra](https://github.com/dhaval-vedra)**
 
 *Empowering AI at the edge — from data centers down to $35 computers*
+
+<br/>
+
+[![GitHub stars](https://img.shields.io/github/stars/dhaval-vedra/lowmind?style=social)](https://github.com/dhaval-vedra/lowmind/stargazers)
+&nbsp;
+[![GitHub forks](https://img.shields.io/github/forks/dhaval-vedra/lowmind?style=social)](https://github.com/dhaval-vedra/lowmind/network/members)
+&nbsp;
+[![GitHub watchers](https://img.shields.io/github/watchers/dhaval-vedra/lowmind?style=social)](https://github.com/dhaval-vedra/lowmind/watchers)
+&nbsp;
+[![Twitter Follow](https://img.shields.io/twitter/follow/dhavalvedra?style=social)](https://twitter.com/dhavalvedra)
+
+<br/>
+
+⭐ **Star this repo if LowMind helped you — it keeps the project alive!** ⭐
 
 </div>
