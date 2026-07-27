@@ -47,7 +47,8 @@ class Trainer:
 
     def __init__(self, model, optimizer, loss_fn,
                  callbacks=None, clip_grad=0.0,
-                 grad_accum_steps=1, verbose=1):
+                 grad_accum_steps=1, verbose=1,
+                 auto_tune_batch_size=False):
         self.model = model
         self.optimizer = optimizer
         self.loss_fn = loss_fn
@@ -55,6 +56,7 @@ class Trainer:
         self.clip_grad = clip_grad
         self.grad_accum_steps = max(1, grad_accum_steps)
         self.verbose = verbose
+        self.auto_tune_batch_size = auto_tune_batch_size
         self.history = {'train_loss': [], 'val_loss': [], 'val_acc': []}
 
     # ------------------------------------------------------------------
@@ -169,22 +171,74 @@ class Trainer:
         n_batches = 0
         self.optimizer.zero_grad()
 
-        for batch_idx, batch in enumerate(loader):
+        iterator = iter(loader)
+        batch_idx = 0
+
+        while True:
+            try:
+                batch = next(iterator)
+            except StopIteration:
+                break
+            except MemoryError as e:
+                if getattr(self, "auto_tune_batch_size", False) and loader.batch_size > 1:
+                    print(f"\n⚠️  MemoryError caught: {e}")
+                    print(f"   Dynamic Auto-tuning: halving batch_size from {loader.batch_size} to {loader.batch_size // 2} "
+                          f"and doubling grad_accum_steps from {self.grad_accum_steps} to {self.grad_accum_steps * 2}")
+
+                    loader.batch_size = max(1, loader.batch_size // 2)
+                    self.grad_accum_steps *= 2
+
+                    from ..core.memory import memory_manager
+                    import gc
+                    memory_manager.clear_cache()
+                    gc.collect()
+
+                    iterator = iter(loader)
+                    total_loss = 0.0
+                    n_batches = 0
+                    self.optimizer.zero_grad()
+                    batch_idx = 0
+                    continue
+                else:
+                    raise e
+
             if isinstance(batch, (tuple, list)) and len(batch) >= 2:
                 X, y = batch[0], batch[1]
             else:
                 raise ValueError("DataLoader must yield (X, y) tuples.")
 
-            out = self.model(X)
-            loss = self.loss_fn(out, y)
+            try:
+                out = self.model(X)
+                loss = self.loss_fn(out, y)
 
-            if self.grad_accum_steps > 1:
-                # Scale loss so accumulated gradient matches a single large batch
-                scale_factor = 1.0 / self.grad_accum_steps
-                loss_scaled = loss * scale_factor
-                loss_scaled.backward()
-            else:
-                loss.backward()
+                if self.grad_accum_steps > 1:
+                    scale_factor = 1.0 / self.grad_accum_steps
+                    loss_scaled = loss * scale_factor
+                    loss_scaled.backward()
+                else:
+                    loss.backward()
+            except MemoryError as e:
+                if getattr(self, "auto_tune_batch_size", False) and loader.batch_size > 1:
+                    print(f"\n⚠️  MemoryError caught during forward/backward pass: {e}")
+                    print(f"   Dynamic Auto-tuning: halving batch_size from {loader.batch_size} to {loader.batch_size // 2} "
+                          f"and doubling grad_accum_steps from {self.grad_accum_steps} to {self.grad_accum_steps * 2}")
+
+                    loader.batch_size = max(1, loader.batch_size // 2)
+                    self.grad_accum_steps *= 2
+
+                    from ..core.memory import memory_manager
+                    import gc
+                    memory_manager.clear_cache()
+                    gc.collect()
+
+                    iterator = iter(loader)
+                    total_loss = 0.0
+                    n_batches = 0
+                    self.optimizer.zero_grad()
+                    batch_idx = 0
+                    continue
+                else:
+                    raise e
 
             total_loss += float(loss.item())
             n_batches += 1
@@ -194,6 +248,8 @@ class Trainer:
                     clip_grad_norm(self.model.parameters(), self.clip_grad)
                 self.optimizer.step()
                 self.optimizer.zero_grad()
+
+            batch_idx += 1
 
         # Flush any remaining accumulated gradients
         remainder = n_batches % self.grad_accum_steps

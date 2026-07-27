@@ -261,6 +261,48 @@ class TestAdvancedOptimizations(unittest.TestCase):
         if os.path.exists(filepath):
             os.remove(filepath)
 
+    def test_auto_tuning_batch_size(self):
+        """Test Auto-tuning Dynamic Batch Size on MemoryError"""
+        print("Testing Auto-tuning Dynamic Batch Size...")
+
+        # Create a simple MLP model
+        model = lm.Sequential(
+            lm.Linear(10, 5)
+        )
+
+        # Generate dummy input and target
+        X = np.random.randn(10, 10).astype(np.float32)
+        y = np.random.randint(0, 5, 10)
+
+        # Mock forward to raise MemoryError if batch size is >= 8
+        def mock_forward(x):
+            if x.shape[0] >= 8:
+                raise MemoryError("Out of Memory simulated for batch size >= 8")
+            # Call original layer 0 forward
+            return model[0].forward(x)
+
+        model.forward = mock_forward
+
+        loader = lm.DataLoader(lm.TensorDataset(X, y), batch_size=8)
+        optimizer = lm.SGD(model.parameters(), lr=0.01)
+
+        trainer = lm.Trainer(
+            model=model,
+            optimizer=optimizer,
+            loss_fn=lm.cross_entropy_loss,
+            grad_accum_steps=1,
+            auto_tune_batch_size=True,
+            verbose=0
+        )
+
+        # Running fit should hit MemoryError at batch_size=8,
+        # auto-tune to batch_size=4 and complete successfully!
+        history = trainer.fit(loader, epochs=1)
+        self.assertIn('train_loss', history)
+        self.assertLess(loader.batch_size, 8)
+        self.assertGreater(trainer.grad_accum_steps, 1)
+        print(f"Auto-tuning verified: new batch_size={loader.batch_size}, grad_accum_steps={trainer.grad_accum_steps}!")
+
 
 def run_tests():
     print("🧪 Running LowMind Advanced Optimization Tests...")
