@@ -14,3 +14,4 @@ from .quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_qu
 from .checkpoint import checkpoint
 from .accelerator import is_jit_accelerated, col2im_optimized
 from .onnx_exporter import export_to_onnx
+from .cpp_exporter import export_to_cpp
