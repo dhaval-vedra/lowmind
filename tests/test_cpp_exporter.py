@@ -153,3 +153,88 @@ def test_cpp_exporter_unsupported_model():
     # Pass an object that does not represent a list of modules or layers to test error handling
     with pytest.raises(ValueError, match="Model has no sequential layers or submodules to export"):
         lm.export_to_cpp("not_a_model", (10,), "fail.h")
+
+
+def test_cpp_exporter_profiler_and_sketch():
+    np.random.seed(42)
+    model = lm.Sequential(
+        lm.Linear(in_features=4, out_features=2),
+        lm.ReLU()
+    )
+    model.eval()
+
+    header_path = "test_profile_model.h"
+    sketch_path = "test_profile_model.ino"
+
+    # Export with generate_arduino_sketch=True
+    lm.export_to_cpp(model, (4,), header_path, namespace="profile_model", generate_arduino_sketch=True)
+
+    # Assert both files were created successfully
+    assert os.path.exists(header_path)
+    assert os.path.exists(sketch_path)
+
+    # Verify content of the sketch file
+    with open(sketch_path, "r") as f:
+        ino_content = f.read()
+    assert "LOWMIND HARDWARE IN-SITU INFERENCE BENCHMARK" in ino_content
+    assert "profile_model::predict" in ino_content
+    assert "profile_model::TOTAL_ROM_BYTES" in ino_content
+
+    # Clean up
+    if os.path.exists(header_path):
+        os.remove(header_path)
+    if os.path.exists(sketch_path):
+        os.remove(sketch_path)
+
+
+def test_cpp_exporter_normalization():
+    np.random.seed(42)
+    model = lm.Sequential(
+        lm.Linear(in_features=3, out_features=1),
+    )
+    model.eval()
+
+    header_path = "test_norm_model.h"
+    lm.export_to_cpp(model, (3,), header_path, namespace="norm_model")
+
+    # Write verification driver testing both normalization and predict
+    runner_code = f"""#include <iostream>
+#include <iomanip>
+#include "{header_path}"
+
+int main() {{
+    float data[3] = {{10.0f, 20.0f, 30.0f}};
+    const float mean[3] = {{2.0f, 5.0f, 10.0f}};
+    const float std_dev[3] = {{4.0f, 5.0f, 20.0f}};
+
+    // Call generated normalize utility
+    norm_model::normalize_input(data, mean, std_dev, 3);
+
+    std::cout << std::scientific << std::setprecision(6);
+    std::cout << data[0] << " " << data[1] << " " << data[2] << std::endl;
+    return 0;
+}}
+"""
+    runner_path = "temp_runner_norm.cpp"
+    with open(runner_path, "w") as f:
+        f.write(runner_code)
+
+    executable_path = "./temp_runner_norm"
+    compile_cmd = ["g++", "-O3", runner_path, "-o", executable_path]
+    compile_res = subprocess.run(compile_cmd, capture_output=True, text=True)
+    assert compile_res.returncode == 0, f"Compilation failed: {compile_res.stderr}"
+
+    run_res = subprocess.run([executable_path], capture_output=True, text=True)
+    assert run_res.returncode == 0, f"Execution failed: {run_res.stderr}"
+
+    cpp_out_strs = run_res.stdout.strip().split()
+    cpp_out = np.array([float(val) for val in cpp_out_strs], dtype=np.float32)
+
+    # Clean up
+    for path in (header_path, runner_path, executable_path):
+        if os.path.exists(path):
+            os.remove(path)
+
+    # Expected python manual normalization: (val - mean) / std
+    expected = (np.array([10.0, 20.0, 30.0]) - np.array([2.0, 5.0, 10.0])) / np.array([4.0, 5.0, 20.0])
+    assert np.allclose(expected, cpp_out, atol=1e-4)
