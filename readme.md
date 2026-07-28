@@ -98,11 +98,12 @@ pip install lowmind
   📊 Metrics Suite          ████████████████████  100%
   🎯 High-level Trainer     ████████████████████  100%
   🔔 Callbacks              ████████████████████  100%
-  🤖 Pre-built Models       ██████████████████░░   90%
+  🤖 Pre-built Models       ████████████████████  100%
   🖥️  System Monitor        ████████████████████  100%
   ⚙️  Model I/O (gzip)      ████████████████████  100%
-  🔢 INT8 Quantization      ░░░░░░░░░░░░░░░░░░░░  Coming
-  🔄 LSTM / GRU             ░░░░░░░░░░░░░░░░░░░░  Coming
+  🔢 INT8 Quantization      ████████████████████  100%
+  🔄 LSTM / GRU             ████████████████████  100%
+  🔌 Embedded C++ Exporter  ████████████████████  100%
   🌐 Distributed Pi Cluster ░░░░░░░░░░░░░░░░░░░░  Planned
 ```
 
@@ -449,6 +450,27 @@ lm.memory_manager.optimize_for_inference()
 lm.memory_manager.get_memory_info()
 # {'allocated_mb': 12.3, 'max_mb': 128.0, 'usage_percent': 9.6}
 ```
+</details>
+
+<details>
+<summary><h3>🔌 Embedded C++ Inference Engine Exporter</h3></summary>
+
+Export your trained LowMind Sequential models directly into standard, highly-efficient, standalone C++ header files ready to compile and run on microcontrollers (Arduino, ESP32, STM32) without Python!
+
+```python
+import lowmind as lm
+
+# 1. Define input shape (C, H, W) or flat features
+input_shape = (1, 8, 8)
+
+# 2. Export model weights, biases, and layers to a self-contained header file
+lm.export_to_cpp(model, input_shape, "embedded_model.h", namespace="my_embedded_model")
+```
+
+#### Key Advantages:
+- **Ping-Pong Static Buffer Architecture**: Avoids dynamic memory allocation (`malloc`/`new`) completely. Keeps memory consumption perfectly predictable and constant on small microcontrollers.
+- **Pure Self-Contained C++**: Generated with standard `<cmath>` and arrays. Zero external dependencies required.
+- **Extensive Layer Support**: Supports Linear, Conv2d, BatchNorm1d/BatchNorm2d, MaxPool2d, AvgPool2d, Flatten, ReLU, LeakyReLU, Sigmoid, Tanh, and Softmax layers.
 </details>
 
 ---
