@@ -470,14 +470,6 @@ lm.export_to_cpp(model, input_shape, "embedded_model.h", namespace="my_embedded_
 ```
 </details>
 
-#### Key Advantages:
-- **Ping-Pong Static Buffer Architecture**: Avoids dynamic memory allocation (`malloc`/`new`) completely. Keeps memory consumption perfectly predictable and constant on small microcontrollers.
-- **Pure Self-Contained C++**: Generated with standard `<cmath>` and arrays. Zero external dependencies required.
-- **Extensive Layer Support**: Supports Linear, Conv2d, BatchNorm1d/BatchNorm2d, MaxPool2d, AvgPool2d, Flatten, ReLU, LeakyReLU, Sigmoid, Tanh, and Softmax layers.
-</details>
-
----
-
 <details>
 <summary><h3>✂️ Weight Pruning & Sparsity</h3></summary>
 
