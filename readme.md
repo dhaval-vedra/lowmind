@@ -31,11 +31,6 @@
 [![Windows](https://img.shields.io/badge/Windows-Supported-0078D6?style=flat-square&logo=windows&logoColor=white)](https://www.microsoft.com/)
 [![ARM](https://img.shields.io/badge/ARM-Compatible-0091BD?style=flat-square&logo=arm&logoColor=white)](https://www.arm.com/)
 
-<!-- BADGE ROW 2 -->
-[![Downloads](https://img.shields.io/pypi/dm/lowmind?style=for-the-badge&color=8B5CF6&logo=python&logoColor=white&label=Monthly+Downloads)](https://pypi.org/project/lowmind/)
-[![Stars](https://img.shields.io/github/stars/dhaval-vedra/lowmind?style=for-the-badge&color=FFD700&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/stargazers)
-[![Issues](https://img.shields.io/github/issues/dhaval-vedra/lowmind?style=for-the-badge&color=00d4ff&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/issues)
-[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&logo=git&logoColor=white)](https://github.com/dhaval-vedra/lowmind/pulls)
 
 <!-- INLINE SVG BANNER -->
 <div align="center">
@@ -474,8 +469,6 @@ lm.export_to_cpp(model, input_shape, "embedded_model.h", namespace="my_embedded_
 - **Ping-Pong Static Buffer Architecture**: Avoids dynamic memory allocation (`malloc`/`new`) completely. Keeps memory consumption perfectly predictable and constant on small microcontrollers.
 - **Pure Self-Contained C++**: Generated with standard `<cmath>` and arrays. Zero external dependencies required.
 - **Extensive Layer Support**: Supports Linear, Conv2d, BatchNorm1d/BatchNorm2d, MaxPool2d, AvgPool2d, Flatten, ReLU, LeakyReLU, Sigmoid, Tanh, and Softmax layers.
-</details>
-
 ---
 
 <details>
