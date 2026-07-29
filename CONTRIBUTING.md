@@ -196,7 +196,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For issues and questions:
 - 📧 Email: gametidhaval980@gmail.com
-- 💬 Issues: [GitHub Issues](https://github.com/dhaval-gamet/lowmind/issues)
+- 💬 Issues: [GitHub Issues](https://github.com/dhaval-vedra/lowmind/issues)
 
 
 ---
