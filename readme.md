@@ -31,9 +31,11 @@
 [![Windows](https://img.shields.io/badge/Windows-Supported-0078D6?style=flat-square&logo=windows&logoColor=white)](https://www.microsoft.com/)
 [![ARM](https://img.shields.io/badge/ARM-Compatible-0091BD?style=flat-square&logo=arm&logoColor=white)](https://www.arm.com/)
 
-</div>
-
----
+<!-- BADGE ROW 2 -->
+[![Downloads](https://img.shields.io/pypi/dm/lowmind?style=for-the-badge&color=8B5CF6&logo=python&logoColor=white&label=Monthly+Downloads)](https://pypi.org/project/lowmind/)
+[![Stars](https://img.shields.io/github/stars/dhaval-vedra/lowmind?style=for-the-badge&color=FFD700&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/stargazers)
+[![Issues](https://img.shields.io/github/issues/dhaval-vedra/lowmind?style=for-the-badge&color=00d4ff&logo=github&logoColor=white)](https://github.com/dhaval-vedra/lowmind/issues)
+[![PRs Welcome](https://img.shields.io/badge/PRs-Welcome-brightgreen?style=for-the-badge&logo=git&logoColor=white)](https://github.com/dhaval-vedra/lowmind/pulls)
 
 <!-- INLINE SVG BANNER -->
 <div align="center">
@@ -98,11 +100,12 @@ pip install lowmind
   📊 Metrics Suite          ████████████████████  100%
   🎯 High-level Trainer     ████████████████████  100%
   🔔 Callbacks              ████████████████████  100%
-  🤖 Pre-built Models       ██████████████████░░   90%
+  🤖 Pre-built Models       ████████████████████  100%
   🖥️  System Monitor        ████████████████████  100%
   ⚙️  Model I/O (gzip)      ████████████████████  100%
-  🔢 INT8 Quantization      ░░░░░░░░░░░░░░░░░░░░  Coming
-  🔄 LSTM / GRU             ░░░░░░░░░░░░░░░░░░░░  Coming
+  🔢 INT8 Quantization      ████████████████████  100%
+  🔄 LSTM / GRU             ████████████████████  100%
+  🔌 Embedded C++ Exporter  ████████████████████  100%
   🌐 Distributed Pi Cluster ░░░░░░░░░░░░░░░░░░░░  Planned
 ```
 
@@ -448,6 +451,189 @@ with lm.memory_trace("Forward Pass"):
 lm.memory_manager.optimize_for_inference()
 lm.memory_manager.get_memory_info()
 # {'allocated_mb': 12.3, 'max_mb': 128.0, 'usage_percent': 9.6}
+```
+</details>
+
+<details>
+<summary><h3>🔌 Embedded C++ Inference Engine Exporter</h3></summary>
+
+Export your trained LowMind Sequential models directly into standard, highly-efficient, standalone C++ header files ready to compile and run on microcontrollers (Arduino, ESP32, STM32) without Python!
+
+```python
+import lowmind as lm
+
+# 1. Define input shape (C, H, W) or flat features
+input_shape = (1, 8, 8)
+
+# 2. Export model weights, biases, and layers to a self-contained header file
+lm.export_to_cpp(model, input_shape, "embedded_model.h", namespace="my_embedded_model")
+```
+</details>
+
+#### Key Advantages:
+- **Ping-Pong Static Buffer Architecture**: Avoids dynamic memory allocation (`malloc`/`new`) completely. Keeps memory consumption perfectly predictable and constant on small microcontrollers.
+- **Pure Self-Contained C++**: Generated with standard `<cmath>` and arrays. Zero external dependencies required.
+- **Extensive Layer Support**: Supports Linear, Conv2d, BatchNorm1d/BatchNorm2d, MaxPool2d, AvgPool2d, Flatten, ReLU, LeakyReLU, Sigmoid, Tanh, and Softmax layers.
+</details>
+
+---
+
+<details>
+<summary><h3>✂️ Weight Pruning & Sparsity</h3></summary>
+
+Magnitude-based weight pruning API to zero out low-magnitude weights and calculate overall model sparsity.
+
+```python
+import lowmind as lm
+
+# Create a pruner for your model
+pruner = lm.Pruner(model)
+
+# Prune the entire model (skip biases by default) to a target sparsity ratio (0.0 to 1.0)
+pruner.prune_model(sparsity_ratio=0.5)
+
+# Prune specific weight parameters of a layer
+pruner.prune_module_weight("fc.weight", sparsity_ratio=0.5)
+
+# Re-apply pruning masks (vital to call after optimizer.step() during training)
+optimizer.step()
+pruner.apply_masks()
+
+# Calculate current sparsity percentage of the model
+sparsity_pct = pruner.calculate_sparsity()
+print(f"Model Sparsity: {sparsity_pct:.2f}%")
+```
+</details>
+
+<details>
+<summary><h3>🎯 INT8 Model Quantization</h3></summary>
+
+Post-Training Integer (INT8) Quantization helper to convert float32 weights to simulated 8-bit integer weights.
+
+```python
+import lowmind as lm
+
+# In-place quantization of model weights to simulate 8-bit integers
+model.quantize()
+
+# Alternatively, extract integer weights and scale factor of a specific tensor
+q_data, scale = lm.quantize_weight(model[0].weight)
+
+# Wrap quantized data in a container
+quantized_tensor = lm.QuantizedTensor(q_data, scale)
+
+# Convert back to float32 representation
+float_data = quantized_tensor.dequantize()
+```
+</details>
+
+<details>
+<summary><h3>🏋️ Quantization Aware Training (QAT)</h3></summary>
+
+Simulate the effects of 8-bit integer quantization during training using Straight-Through Estimators (STE). This allows the model's weights to adapt and learn quantization robust features, resulting in almost 0% accuracy drop when finally quantized to INT8!
+
+```python
+import lowmind as lm
+
+# 1. Enable QAT (Straight-Through Estimators) on all layers of a model
+lm.prepare_qat(model, enabled=True)
+
+# 2. Train the model normally using any trainer or custom loop
+# Standard SGD, Adam, and backpropagation are fully supported
+trainer.fit(loader, epochs=5)
+
+# 3. Toggle QAT off after training
+lm.prepare_qat(model, enabled=False)
+
+# 4. Perform final INT8 quantization
+model.quantize()
+```
+</details>
+
+<details>
+<summary><h3>🎓 Knowledge Distillation</h3></summary>
+
+Knowledge Distillation Trainer to transfer knowledge from a heavy, pre-trained Teacher model to a lightweight Student model.
+
+```python
+import lowmind as lm
+
+# Setup DistillationTrainer (combines hard label loss and soft temperature-scaled loss)
+trainer = lm.DistillationTrainer(
+    student_model=student_model,
+    teacher_model=teacher_model,
+    optimizer=optimizer,
+    loss_fn=lm.cross_entropy_loss,
+    temperature=3.0,  # Soft target scaling temperature (default 3.0)
+    alpha=0.5,        # Coefficient weight for soft loss vs hard loss (default 0.5)
+    clip_grad=1.0,
+    grad_accum_steps=1,
+    verbose=1
+)
+
+# Train the student model
+history = trainer.fit(train_loader, val_loader, epochs=10)
+```
+</details>
+
+<details>
+<summary><h3>🗜️ Gradient Accumulation</h3></summary>
+
+Simulate large batch sizes on low-memory edge devices by accumulating gradients over multiple steps before performing an optimizer update.
+
+```python
+import lowmind as lm
+
+# Pass grad_accum_steps parameter to Trainer
+trainer = lm.Trainer(
+    model=model,
+    optimizer=optimizer,
+    loss_fn=lm.cross_entropy_loss,
+    grad_accum_steps=4  # Accumulate over 4 steps (effectively 4x batch size)
+)
+```
+</details>
+
+<details>
+<summary><h3>🛡️ Gradient Checkpointing</h3></summary>
+
+Trade compute for massive memory savings on edge devices. Only save activations at checkpoints and recompute the rest during the backward pass on-the-fly.
+
+```python
+import lowmind as lm
+
+# Wrap Sequential block or any sub-module function in checkpoint
+out = lm.checkpoint(model_block, input_tensor)
+```
+</details>
+
+<details>
+<summary><h3>🚀 Hardware Bottleneck Accelerator</h3></summary>
+
+Check if hardware acceleration is active. Incorporates blazingly fast memory stride tricks and optional Numba Just-In-Time (JIT) compiler fallback to accelerate k-D convolutions at assembly-level speed (10x - 50x speedup!).
+
+```python
+import lowmind as lm
+
+# Check if hardware JIT/stride acceleration is active on this system
+print("JIT Accelerated:", lm.is_jit_accelerated())
+```
+</details>
+
+<details>
+<summary><h3>🔄 ONNX Model Export</h3></summary>
+
+Exports a LowMind model to standard ONNX format for cross-platform deployment on PyTorch, TensorFlow, ONNX Runtime, TensorRT, or Android/iOS accelerators.
+
+```python
+import lowmind as lm
+import numpy as np
+
+# Define dummy input
+dummy_input = np.random.randn(1, 3, 32, 32).astype(np.float32)
+
+# Export and verify to standard .onnx file
+onnx_model = lm.export_to_onnx(model, dummy_input, "model.onnx")
 ```
 </details>
 

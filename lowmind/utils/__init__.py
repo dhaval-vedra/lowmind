@@ -5,6 +5,13 @@ from .metrics import (
 )
 from .trainer import Trainer
 from .callbacks import Callback, EarlyStopping, ModelCheckpoint, LRSchedulerCallback, History
-from .monitor import SystemMonitor, memory_trace
+from .monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .profiler import ModelProfiler
 from .lr_finder import LRFinder
+from .pruner import Pruner
+from .distillation import DistillationTrainer
+from .quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_quantize, prepare_qat
+from .checkpoint import checkpoint
+from .accelerator import is_jit_accelerated, col2im_optimized
+from .onnx_exporter import export_to_onnx
+from .cpp_exporter import export_to_cpp
