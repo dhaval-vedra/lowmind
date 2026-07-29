@@ -454,6 +454,15 @@ lm.memory_manager.get_memory_info()
 ```
 </details>
 
+#### Key Advantages:
+- **Ping-Pong Static Buffer Architecture**: Avoids dynamic memory allocation (`malloc`/`new`) completely. Keeps memory consumption perfectly predictable and constant on small microcontrollers.
+- **Pure Self-Contained C++**: Generated with standard `<cmath>` and arrays. Zero external dependencies required.
+- **Extensive Layer Support**: Supports Linear, Conv2d, BatchNorm1d/BatchNorm2d, MaxPool2d, AvgPool2d, Flatten, ReLU, LeakyReLU, Sigmoid, Tanh, and Softmax layers.
+</details>
+
+---
+
+
 <details>
 <summary><h3>🔌 Embedded C++ Inference Engine Exporter</h3></summary>
 
