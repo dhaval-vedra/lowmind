@@ -1,4 +1,5 @@
 import os
+import shutil
 import subprocess
 import numpy as np
 import pytest
@@ -238,3 +239,101 @@ int main() {{
     # Expected python manual normalization: (val - mean) / std
     expected = (np.array([10.0, 20.0, 30.0]) - np.array([2.0, 5.0, 10.0])) / np.array([4.0, 5.0, 20.0])
     assert np.allclose(expected, cpp_out, atol=1e-4)
+
+
+def test_cpp_exporter_quantized():
+    np.random.seed(42)
+
+    # 1. Build a diverse Sequential model
+    model = lm.Sequential(
+        lm.Conv2d(in_channels=1, out_channels=2, kernel_size=3, padding=1),
+        lm.BatchNorm2d(num_features=2),
+        lm.ReLU(),
+        lm.MaxPool2d(kernel_size=2, stride=2),
+        lm.Flatten(),
+        lm.Linear(in_features=32, out_features=4),
+        lm.Sigmoid()
+    )
+    model.eval()
+
+    input_shape = (1, 8, 8)
+    x = lm.randn(1, *input_shape)
+    python_out = model(x).data[0]
+
+    # Export quantized model to C++ header
+    header_path = "temp_model_quant.h"
+    lm.export_to_cpp(model, input_shape, header_path, namespace="my_quant_model", quantized=True)
+
+    # Generate C++ Verification Test Runner Code
+    runner_code = f"""#include <iostream>
+#include <iomanip>
+#include "{header_path}"
+
+int main() {{
+    const float input[{np.prod(input_shape)}] = {{
+        {", ".join(f"{float(val):.8f}f" for val in x.data.flatten())}
+    }};
+
+    float output[my_quant_model::OUTPUT_SIZE] = {{0.0f}};
+
+    // Call the exported static quantized model predict function
+    my_quant_model::predict(input, output);
+
+    std::cout << std::scientific << std::setprecision(9);
+    for (int i = 0; i < my_quant_model::OUTPUT_SIZE; ++i) {{
+        std::cout << output[i] << (i == my_quant_model::OUTPUT_SIZE - 1 ? "" : " ");
+    }}
+    std::cout << std::endl;
+    return 0;
+}}
+"""
+    runner_path = "temp_runner_quant.cpp"
+    with open(runner_path, "w") as f:
+        f.write(runner_code)
+
+    executable_path = "./temp_runner_quant"
+    compile_cmd = ["g++", "-O3", runner_path, "-o", executable_path]
+    compile_res = subprocess.run(compile_cmd, capture_output=True, text=True)
+    assert compile_res.returncode == 0, f"Compilation failed: {compile_res.stderr}"
+
+    run_res = subprocess.run([executable_path], capture_output=True, text=True)
+    assert run_res.returncode == 0, f"Execution failed: {run_res.stderr}"
+
+    cpp_out_strs = run_res.stdout.strip().split()
+    cpp_out = np.array([float(val) for val in cpp_out_strs], dtype=np.float32)
+
+    # Clean up
+    for path in (header_path, runner_path, executable_path):
+        if os.path.exists(path):
+            os.remove(path)
+
+    # Assert numeric parity to a reasonable quantized degree of precision (tolerance < 5e-2 since weights are quantized to int8)
+    print("Python Float Output:", python_out)
+    print("C++ Quantized Output:", cpp_out)
+    assert np.allclose(python_out, cpp_out, atol=5e-2)
+
+
+def test_cpp_exporter_platformio():
+    np.random.seed(42)
+    model = lm.Sequential(
+        lm.Linear(in_features=4, out_features=2),
+    )
+    model.eval()
+
+    header_path = "temp_pio_model.h"
+    project_dir = "temp_pio_model_pio"
+
+    # Export with generate_platformio=True
+    lm.export_to_cpp(model, (4,), header_path, namespace="pio_model", generate_platformio=True)
+
+    # Verify PlatformIO project layouts
+    assert os.path.exists(project_dir)
+    assert os.path.exists(os.path.join(project_dir, "platformio.ini"))
+    assert os.path.exists(os.path.join(project_dir, "include", "temp_pio_model.h"))
+    assert os.path.exists(os.path.join(project_dir, "src", "main.cpp"))
+
+    # Clean up
+    if os.path.exists(header_path):
+        os.remove(header_path)
+    if os.path.exists(project_dir):
+        shutil.rmtree(project_dir)
