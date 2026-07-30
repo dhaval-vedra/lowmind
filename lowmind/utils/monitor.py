@@ -156,3 +156,31 @@ class memory_trace:
         delta = (end_mem - self._start_mem) / 1e6
         print(f"[{self.name}]  time={elapsed*1000:.1f}ms  "
               f"mem_delta={delta:+.2f}MB  total={end_mem/1e6:.2f}MB")
+
+
+class RaspberryPiAdvancedMonitor(SystemMonitor):
+    """
+    Compatibility subclass providing the same interface as the old
+    monolithic RaspberryPiAdvancedMonitor.
+    """
+    def get_system_stats(self):
+        stats = self.get_stats()
+        # Map values to old key names for backward compatibility
+        mapped_stats = {
+            'cpu_temp': stats.get('cpu_temp_c', 45.0) if stats.get('cpu_temp_c') is not None else 45.0,
+            'cpu_percent': stats.get('cpu_percent', 0.0),
+            'memory_percent': stats.get('ram_percent', stats.get('system_memory_percent', 0.0)),
+            'memory_available_mb': stats.get('ram_available_mb', 0.0),
+            'disk_percent': stats.get('disk_percent', 0.0),
+            'uptime': stats.get('uptime_s', 0.0)
+        }
+        return mapped_stats
+
+    def print_detailed_status(self):
+        self.print_status()
+
+    def get_health_score(self):
+        return self.health_score()
+
+    def update_monitoring(self):
+        return self.update()

@@ -87,9 +87,16 @@ from .utils.callbacks import (
     Callback, EarlyStopping, ModelCheckpoint,
     LRSchedulerCallback, History,
 )
-from .utils.monitor import SystemMonitor, memory_trace
+from .utils.monitor import SystemMonitor, memory_trace, RaspberryPiAdvancedMonitor
 from .utils.profiler import ModelProfiler
 from .utils.lr_finder import LRFinder
+from .utils.pruner import Pruner
+from .utils.distillation import DistillationTrainer
+from .utils.quantizer import QuantizedTensor, quantize_weight, quantize_model, fake_quantize, prepare_qat
+from .utils.checkpoint import checkpoint
+from .utils.accelerator import is_jit_accelerated
+from .utils.onnx_exporter import export_to_onnx
+from .utils.cpp_exporter import export_to_cpp
 
 # ── Pre-built Models ───────────────────────────────────────────────────────────
 from .models.micro_cnn import MicroMLP, MicroCNN, TinyResNet
@@ -142,9 +149,11 @@ __all__ = [
     "Callback", "EarlyStopping", "ModelCheckpoint",
     "LRSchedulerCallback", "History",
     # Monitoring
-    "SystemMonitor", "memory_trace",
+    "SystemMonitor", "memory_trace", "RaspberryPiAdvancedMonitor",
     # Profiler & LR Finder
     "ModelProfiler", "LRFinder",
+    # Advanced Optimizations
+    "Pruner", "DistillationTrainer", "QuantizedTensor", "quantize_weight", "quantize_model", "checkpoint", "is_jit_accelerated", "fake_quantize", "prepare_qat", "export_to_onnx", "export_to_cpp",
     # Models
     "MicroMLP", "MicroCNN", "TinyResNet",
     # Sub-modules

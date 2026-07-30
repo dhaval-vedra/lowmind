@@ -1,5 +1,6 @@
 import lowmind as lm
 import numpy as np
+import time
 
 
 def performance_benchmark_visible():
